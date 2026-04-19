@@ -1,0 +1,1607 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>BK Smart — AKPD & Sosiometri</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,600;0,9..144,700&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0d1018;--sf:#161b28;--sf2:#1b2236;--sf3:#222840;
+  --bd:#283046;--bd2:#32405e;
+  --ac:#5b8ef0;--ac2:#7fa8f5;--acs:rgba(91,142,240,.13);
+  --gold:#e8c97a;--golds:rgba(232,201,122,.11);
+  --green:#4ecb8a;--greens:rgba(78,203,138,.11);
+  --red:#f06b6b;--reds:rgba(240,107,107,.11);
+  --amber:#f0b95b;--ambers:rgba(240,185,91,.11);
+  --purple:#a78bf5;--purples:rgba(167,139,245,.11);
+  --teal:#4ec9c9;--teals:rgba(78,201,201,.11);
+  --pink:#f06ba8;--pinks:rgba(240,107,168,.11);
+  --tx:#e8eaf2;--tx2:#9aa0b8;--tx3:#6b7394;
+  --r:14px;--rsm:8px;--rlg:20px;
+  --sh:0 4px 24px rgba(0,0,0,.45);--shl:0 8px 40px rgba(0,0,0,.55);
+  --tr:.2s cubic-bezier(.4,0,.2,1);
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--tx);min-height:100vh;line-height:1.6;overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.025'/%3E%3C/svg%3E");pointer-events:none;z-index:0;opacity:.5}
+.pg{display:none;min-height:100vh;position:relative;z-index:1}
+.pg.active{display:flex;flex-direction:column}
+
+.btn{display:inline-flex;align-items:center;gap:8px;padding:10px 20px;border-radius:var(--rsm);font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;cursor:pointer;border:none;transition:var(--tr);letter-spacing:.01em;white-space:nowrap}
+.btn-p{background:var(--ac);color:#fff;box-shadow:0 2px 12px rgba(91,142,240,.3)}
+.btn-p:hover{background:var(--ac2);transform:translateY(-1px)}
+.btn-g{background:transparent;color:var(--tx2);border:1px solid var(--bd2)}
+.btn-g:hover{background:var(--sf3);color:var(--tx)}
+.btn-d{background:var(--reds);color:var(--red);border:1px solid rgba(240,107,107,.2)}
+.btn-d:hover{background:rgba(240,107,107,.22)}
+.btn-gold{background:var(--golds);color:var(--gold);border:1px solid rgba(232,201,122,.2)}
+.btn-gold:hover{background:rgba(232,201,122,.22)}
+.btn-pink{background:var(--pinks);color:var(--pink);border:1px solid rgba(240,107,168,.2)}
+.btn-pink:hover{background:rgba(240,107,168,.22)}
+.btn-purple{background:var(--purples);color:var(--purple);border:1px solid rgba(167,139,245,.2)}
+.btn-purple:hover{background:rgba(167,139,245,.22)}
+.btn-teal{background:var(--teals);color:var(--teal);border:1px solid rgba(78,201,201,.2)}
+.btn-teal:hover{background:rgba(78,201,201,.22)}
+.btn-sm{padding:6px 12px;font-size:12px;border-radius:6px}
+.btn-lg{padding:13px 28px;font-size:15px}
+.btn:disabled{opacity:.4;cursor:not-allowed;transform:none!important}
+.wf{width:100%}
+
+.inp,.sel,textarea{width:100%;padding:11px 14px;background:var(--sf3);border:1px solid var(--bd);border-radius:var(--rsm);color:var(--tx);font-family:'DM Sans',sans-serif;font-size:14px;transition:var(--tr);outline:none}
+.inp:focus,.sel:focus,textarea:focus{border-color:var(--ac);box-shadow:0 0 0 3px var(--acs)}
+.sel{appearance:none;background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%239aa0b8' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 14px center;padding-right:36px;cursor:pointer}
+textarea{resize:vertical;min-height:80px}
+.inp::placeholder,textarea::placeholder{color:var(--tx3)}
+label{display:block;font-size:13px;font-weight:500;color:var(--tx2);margin-bottom:6px}
+.fg{margin-bottom:18px}
+.fr{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+
+.bdg{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:20px;font-size:12px;font-weight:500}
+.bg-gn{background:var(--greens);color:var(--green)}.bg-rd{background:var(--reds);color:var(--red)}.bg-am{background:var(--ambers);color:var(--amber)}.bg-bl{background:var(--acs);color:var(--ac2)}.bg-pu{background:var(--purples);color:var(--purple)}.bg-go{background:var(--golds);color:var(--gold)}.bg-te{background:var(--teals);color:var(--teal)}.bg-pk{background:var(--pinks);color:var(--pink)}
+
+#toast{position:fixed;bottom:24px;right:24px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.ti{background:var(--sf2);border:1px solid var(--bd2);border-radius:var(--rsm);padding:13px 18px;font-size:14px;min-width:250px;max-width:330px;box-shadow:var(--shl);display:flex;align-items:center;gap:10px;animation:tIn .3s ease}
+.ti.success{border-left:3px solid var(--green)}.ti.error{border-left:3px solid var(--red)}.ti.info{border-left:3px solid var(--ac)}
+@keyframes tIn{from{transform:translateX(110%);opacity:0}to{transform:none;opacity:1}}
+
+.mo{display:none;position:fixed;inset:0;z-index:1000;background:rgba(0,0,0,.75);backdrop-filter:blur(5px);align-items:center;justify-content:center;padding:16px}
+.mo.open{display:flex}
+.md{background:var(--sf);border:1px solid var(--bd2);border-radius:var(--rlg);padding:28px 32px;width:100%;max-width:580px;max-height:92vh;overflow-y:auto;animation:mIn .25s ease}
+.md-w{max-width:880px}
+.md-xl{max-width:1100px}
+@keyframes mIn{from{transform:scale(.93) translateY(12px);opacity:0}to{transform:none;opacity:1}}
+.mhd{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px}
+.mtt{font-family:'Fraunces',serif;font-size:21px;font-weight:700}
+.mclose{background:none;border:none;color:var(--tx3);cursor:pointer;font-size:20px;padding:4px;border-radius:4px;transition:var(--tr)}
+.mclose:hover{color:var(--tx);background:var(--sf3)}
+
+/* LOGIN */
+#pg-login{align-items:center;justify-content:center;background:radial-gradient(ellipse at 20% 50%,rgba(91,142,240,.09),transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(167,139,245,.06),transparent 50%)}
+.lw{width:100%;max-width:420px;padding:20px}
+.llo{text-align:center;margin-bottom:32px}
+.llo-ic{width:58px;height:58px;background:var(--acs);border:1px solid rgba(91,142,240,.3);border-radius:16px;display:inline-flex;align-items:center;justify-content:center;font-size:27px;margin-bottom:14px;box-shadow:0 0 30px rgba(91,142,240,.2)}
+.lb{font-family:'Fraunces',serif;font-size:30px;font-weight:700}
+.ltag{font-size:13px;color:var(--tx3);margin-top:4px}
+.lc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--rlg);padding:30px;box-shadow:var(--shl)}
+.ltabs{display:flex;gap:4px;background:var(--sf3);border-radius:8px;padding:4px;margin-bottom:26px}
+.ltab{flex:1;padding:8px;border:none;border-radius:6px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:var(--tr);color:var(--tx3);background:none}
+.ltab.active{background:var(--ac);color:#fff;box-shadow:0 2px 8px rgba(91,142,240,.3)}
+.lft{text-align:center;margin-top:16px;font-size:12px;color:var(--tx3)}
+
+/* APP */
+.ash{display:flex;flex-direction:column;min-height:100vh}
+.tb{background:var(--sf);border-bottom:1px solid var(--bd);padding:0 24px;height:60px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;backdrop-filter:blur(14px)}
+.tb-br{display:flex;align-items:center;gap:10px}
+.tb-ic{width:34px;height:34px;background:var(--acs);border:1px solid rgba(91,142,240,.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.tb-tt{font-family:'Fraunces',serif;font-size:18px;font-weight:700}
+.tb-ri{display:flex;align-items:center;gap:12px}
+.tb-us{font-size:13px;color:var(--tx2)}
+.tb-us strong{color:var(--tx)}
+
+/* SIDEBAR */
+.glay{display:flex;flex:1;overflow:hidden}
+.sb{width:238px;background:var(--sf);border-right:1px solid var(--bd);padding:14px 10px;flex-shrink:0;display:flex;flex-direction:column;gap:2px;overflow-y:auto}
+.sb-lbl{font-size:10px;font-weight:700;color:var(--tx3);letter-spacing:.09em;text-transform:uppercase;padding:12px 12px 6px}
+.ni{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:var(--rsm);font-size:14px;color:var(--tx2);cursor:pointer;transition:var(--tr);border:none;background:none;width:100%;text-align:left}
+.ni:hover{background:var(--sf3);color:var(--tx)}
+.ni.active{background:var(--acs);color:var(--ac2);font-weight:500}
+.nic{font-size:15px;width:20px;text-align:center}
+.mc{flex:1;padding:26px;overflow-y:auto}
+.ph{margin-bottom:22px}
+.pt{font-family:'Fraunces',serif;font-size:25px;font-weight:700}
+.ps{font-size:13px;color:var(--tx2);margin-top:3px}
+
+/* STATS */
+.sg{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:22px}
+.sc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:18px;display:flex;flex-direction:column;gap:6px}
+.sl{font-size:11px;color:var(--tx3);font-weight:600;text-transform:uppercase;letter-spacing:.06em}
+.sv{font-family:'Fraunces',serif;font-size:28px;font-weight:700}
+.sd{font-size:12px;color:var(--tx3)}
+.sc.bl .sv{color:var(--ac2)}.sc.gn .sv{color:var(--green)}.sc.pk .sv{color:var(--pink)}.sc.am .sv{color:var(--amber)}.sc.pu .sv{color:var(--purple)}.sc.rd .sv{color:var(--red)}.sc.te .sv{color:var(--teal)}.sc.go .sv{color:var(--gold)}
+
+/* TABLE */
+.tw{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bd)}
+table{width:100%;border-collapse:collapse;font-size:14px}
+thead th{background:var(--sf2);padding:12px 14px;text-align:left;font-size:11px;font-weight:600;color:var(--tx3);letter-spacing:.05em;text-transform:uppercase;border-bottom:1px solid var(--bd);white-space:nowrap}
+tbody tr{border-bottom:1px solid var(--bd);transition:var(--tr)}
+tbody tr:last-child{border-bottom:none}
+tbody tr:hover{background:var(--sf2)}
+tbody td{padding:12px 14px;vertical-align:middle}
+.ta{display:flex;gap:6px;flex-wrap:wrap}
+
+/* PROGRESS */
+.pb{height:6px;background:var(--sf3);border-radius:3px;overflow:hidden}
+.pf{height:100%;border-radius:3px;transition:width .5s ease}
+.pf-bl{background:var(--ac)}.pf-gn{background:var(--green)}.pf-pk{background:var(--pink)}.pf-am{background:var(--amber)}.pf-pu{background:var(--purple)}.pf-te{background:var(--teal)}.pf-go{background:var(--gold)}
+
+/* TOOLBAR */
+.tlb{display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap}
+.sw{position:relative;flex:1;min-width:170px}
+.sw .inp{padding-left:36px}
+.si{position:absolute;left:11px;top:50%;transform:translateY(-50%);color:var(--tx3);font-size:14px;pointer-events:none}
+
+/* SECTIONS */
+.gs{display:none}.gs.active{display:block}
+
+/* CLASS GRID */
+.cg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-top:16px}
+.cc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:18px}
+.cc-hd{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px}
+.cn{font-family:'Fraunces',serif;font-size:16px;font-weight:600}
+
+/* PAKET */
+.pg-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.pkc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:20px;position:relative;overflow:hidden;transition:var(--tr)}
+.pkc:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,.3)}
+.pkc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.c-bl::before{background:var(--ac)}.c-go::before{background:var(--gold)}.c-pu::before{background:var(--purple)}.c-gn::before{background:var(--green)}.c-te::before{background:var(--teal)}.c-pk::before{background:var(--pink)}.c-am::before{background:var(--amber)}.c-rd::before{background:var(--red)}
+.pkl{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;margin-bottom:8px}
+.pkl-ak{background:var(--acs);color:var(--ac2)}.pkl-so{background:var(--pinks);color:var(--pink)}
+.pkl-b1{background:rgba(78,203,138,.15);color:var(--green)}
+.pkl-b2{background:rgba(240,185,91,.15);color:var(--amber)}
+.pkl-b3{background:rgba(167,139,245,.15);color:var(--purple)}
+.pkl-b4{background:rgba(78,201,201,.15);color:var(--teal)}
+.ptt{font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:5px}
+.pds{font-size:13px;color:var(--tx3);margin-bottom:14px;line-height:1.5}
+.pft{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+
+/* SOAL */
+.sll{display:flex;flex-direction:column;gap:8px}
+.sit{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:14px 16px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px}
+.sm{flex:1}.stx{font-size:14px;font-weight:500;margin-bottom:6px;line-height:1.4}
+.sinf{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+
+/* OPSI */
+.olb{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.oib{display:flex;gap:8px;align-items:center}.oib .inp{flex:1}
+.bao{display:flex;align-items:center;justify-content:center;gap:6px;padding:8px;border:1px dashed var(--bd2);border-radius:var(--rsm);font-size:13px;color:var(--tx3);cursor:pointer;background:none;transition:var(--tr);width:100%}
+.bao:hover{border-color:var(--ac);color:var(--ac2)}
+
+/* SISWA */
+.ssh{flex:1;display:flex;flex-direction:column}
+.ssc{flex:1;padding:32px;max-width:780px;margin:0 auto;width:100%}
+
+/* STEP */
+.stind{display:flex;align-items:center;margin-bottom:28px}
+.stel{display:flex;align-items:center;gap:8px;font-size:13px;color:var(--tx3)}
+.stnum{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0;border:2px solid var(--bd2);background:var(--sf2);transition:var(--tr)}
+.stel.done .stnum{background:var(--green);border-color:var(--green);color:#fff}
+.stel.active .stnum{background:var(--ac);border-color:var(--ac);color:#fff}
+.stel.active{color:var(--tx);font-weight:500}
+.stln{flex:1;height:1px;background:var(--bd2);max-width:56px}
+
+/* JENIS CARDS */
+.jg{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:28px}
+.jc{background:var(--sf);border:2px solid var(--bd);border-radius:var(--rlg);padding:28px 22px;cursor:pointer;transition:var(--tr);text-align:center}
+.jc:hover{transform:translateY(-3px)}
+.jc.ak:hover,.jc.ak.sel{border-color:var(--ac);box-shadow:0 0 0 3px var(--acs)}
+.jc.so:hover,.jc.so.sel{border-color:var(--pink);box-shadow:0 0 0 3px var(--pinks)}
+.jic{font-size:42px;margin-bottom:14px}
+.jtt{font-family:'Fraunces',serif;font-size:19px;font-weight:700;margin-bottom:8px}
+.jds{font-size:13px;color:var(--tx3);line-height:1.5}
+.jbdg{display:inline-block;margin-top:12px;padding:4px 12px;border-radius:20px;font-size:11px;font-weight:600}
+.jbdg-ak{background:var(--acs);color:var(--ac2)}.jbdg-so{background:var(--pinks);color:var(--pink)}
+
+/* PAKET SISWA */
+.spg{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px}
+.spc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:18px;cursor:pointer;transition:var(--tr);position:relative;overflow:hidden}
+.spc::before{content:'';position:absolute;top:0;left:0;right:0;height:3px}
+.spc.s-bl::before{background:var(--ac)}.spc.s-go::before{background:var(--gold)}.spc.s-pu::before{background:var(--purple)}.spc.s-gn::before{background:var(--green)}.spc.s-te::before{background:var(--teal)}.spc.s-pk::before{background:var(--pink)}
+.spc:hover:not(.done){border-color:var(--ac);transform:translateY(-2px);box-shadow:0 6px 20px rgba(91,142,240,.15)}
+.spc.done{opacity:.55;cursor:not-allowed}
+.spc.done::after{content:'✓ Sudah Diisi';position:absolute;top:10px;right:10px;background:var(--greens);color:var(--green);font-size:11px;font-weight:600;padding:3px 8px;border-radius:20px;border:1px solid rgba(78,203,138,.2)}
+
+/* Q CARDS */
+.qc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:20px;margin-bottom:12px;transition:border-color .2s}
+.qn{font-size:11px;font-weight:700;color:var(--ac2);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.qt{font-size:15px;font-weight:500;margin-bottom:14px;line-height:1.5}
+.qop{display:flex;flex-direction:column;gap:8px}
+.qo{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--bd);border-radius:var(--rsm);cursor:pointer;transition:var(--tr);font-size:14px}
+.qo:hover{border-color:var(--bd2);background:var(--sf2)}
+.qo.sel{border-color:var(--ac);background:var(--acs);color:var(--ac2)}
+.qrd{width:16px;height:16px;border-radius:50%;border:2px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--tr)}
+.qo.sel .qrd{border-color:var(--ac);background:var(--ac)}
+.qo.sel .qrd::after{content:'';width:6px;height:6px;background:#fff;border-radius:50%}
+.qco{display:flex;align-items:center;gap:10px;padding:11px 14px;border:1px solid var(--bd);border-radius:var(--rsm);cursor:pointer;transition:var(--tr);font-size:14px}
+.qco:hover{border-color:var(--bd2);background:var(--sf2)}
+.qco.sel{border-color:var(--green);background:var(--greens);color:var(--green)}
+.qcb{width:16px;height:16px;border-radius:4px;border:2px solid var(--bd2);flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:var(--tr);font-size:10px}
+.qco.sel .qcb{border-color:var(--green);background:var(--green);color:#fff}
+.lkr{display:flex;gap:8px}
+.lkb{flex:1;padding:12px 4px;border:1px solid var(--bd);border-radius:var(--rsm);background:var(--sf2);cursor:pointer;text-align:center;transition:var(--tr);font-size:14px;font-weight:600;color:var(--tx2)}
+.lkb:hover{border-color:var(--ac);color:var(--ac2)}
+.lkb.sel{border-color:var(--ac);background:var(--ac);color:#fff}
+.lklbl{display:flex;justify-content:space-between;margin-top:6px;font-size:11px;color:var(--tx3)}
+.rrw{display:flex;gap:10px}
+.sb2{font-size:28px;cursor:pointer;transition:var(--tr);filter:grayscale(1);opacity:.35;background:none;border:none}
+.sb2:hover,.sb2.act{filter:none;opacity:1;transform:scale(1.1)}
+.slwp{padding:4px}
+.slvl{text-align:center;font-size:22px;font-family:'Fraunces',serif;font-weight:700;color:var(--ac2);margin-bottom:8px}
+input[type=range]{width:100%;-webkit-appearance:none;height:6px;border-radius:3px;outline:none;cursor:pointer;background:linear-gradient(to right,var(--ac) 0%,var(--ac) var(--pct,50%),var(--sf3) var(--pct,50%))}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:20px;height:20px;border-radius:50%;background:var(--ac);border:3px solid var(--bg);box-shadow:0 2px 8px rgba(91,142,240,.4);cursor:pointer}
+.slends{display:flex;justify-content:space-between;font-size:12px;color:var(--tx3);margin-top:8px}
+.urtl{display:flex;flex-direction:column;gap:6px}
+.urti{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--rsm);padding:10px 13px;display:flex;align-items:center;gap:10px;cursor:grab;transition:var(--tr)}
+.urti:active{cursor:grabbing}
+.urti.dov{border-color:var(--ac);background:var(--acs)}
+.urth{color:var(--tx3);font-size:14px;flex-shrink:0}
+.urtn{width:22px;height:22px;border-radius:50%;background:var(--acs);color:var(--ac2);font-size:11px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.sosiosel{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.sosiosel-l{font-size:13px;color:var(--tx2);margin-bottom:10px;font-weight:500}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:6px;padding:7px 13px;border:1px solid var(--bd2);border-radius:20px;font-size:13px;cursor:pointer;transition:var(--tr);background:var(--sf3)}
+.chip:hover{border-color:var(--pink);color:var(--pink)}
+.chip.sel{border-color:var(--pink);background:var(--pinks);color:var(--pink);font-weight:500}
+
+/* ANSWER */
+.ab{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--rsm);padding:12px 14px;margin-bottom:8px}
+.aq{font-size:13px;color:var(--tx3);margin-bottom:4px;line-height:1.4}
+.aa{font-size:14px;color:var(--tx);font-weight:500}
+
+/* EMPTY */
+.emp{text-align:center;padding:56px 20px;color:var(--tx3)}
+.emp-i{font-size:42px;margin-bottom:12px;opacity:.45}
+.emp-t{font-size:16px;color:var(--tx2);margin-bottom:4px}
+
+/* ── ANALISIS AKPD ── */
+.bidang-tabs{display:flex;gap:4px;background:var(--sf3);border-radius:10px;padding:4px;margin-bottom:20px;flex-wrap:wrap}
+.btab{flex:1;min-width:100px;padding:9px 10px;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:12px;font-weight:600;cursor:pointer;transition:var(--tr);color:var(--tx3);background:none;text-align:center}
+.btab.act-pr{background:var(--green);color:#fff}
+.btab.act-so{background:var(--amber);color:#000}
+.btab.act-bl{background:var(--purple);color:#fff}
+.btab.act-ka{background:var(--teal);color:#000}
+.btab.act-all{background:var(--ac);color:#fff}
+.bidang-section{display:none}.bidang-section.active{display:block}
+.analisis-kelas-sel{display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap}
+/* Bidang indicator */
+.bidang-bar-wrap{margin-bottom:14px}
+.bidang-bar-label{display:flex;justify-content:space-between;font-size:13px;margin-bottom:5px}
+.bidang-bar-label span:last-child{font-weight:600}
+.bidang-score-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;margin-bottom:20px}
+.bsc{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:16px}
+.bsc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px}
+.bsc-nama{font-size:14px;font-weight:500}
+.bsc-skor{font-family:'Fraunces',serif;font-size:20px;font-weight:700}
+/* Top kebutuhan */
+.top-kebutuhan{display:flex;flex-direction:column;gap:8px}
+.tk-item{background:var(--sf2);border:1px solid var(--bd);border-radius:var(--rsm);padding:12px 16px;display:flex;align-items:center;gap:14px}
+.tk-rank{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;flex-shrink:0}
+.tk-rank.r1{background:var(--gold);color:#000}.tk-rank.r2{background:var(--tx3);color:#fff}.tk-rank.r3{background:rgba(205,127,50,.7);color:#fff}.tk-rank.rn{background:var(--sf3);color:var(--tx3)}
+.tk-info{flex:1}
+.tk-q{font-size:13px;color:var(--tx);font-weight:500;line-height:1.4}
+.tk-meta{font-size:12px;color:var(--tx3);margin-top:2px}
+.tk-skor{font-family:'Fraunces',serif;font-size:18px;font-weight:700;flex-shrink:0}
+
+/* ── ANALISIS SOSIOMETRI ── */
+.sosio-matrix{overflow-x:auto;border-radius:var(--r);border:1px solid var(--bd);margin-bottom:20px}
+.sosio-matrix table{width:100%;font-size:12px}
+.sosio-matrix thead th{background:var(--sf2);padding:8px 10px;text-align:center;border-bottom:1px solid var(--bd);white-space:nowrap;font-size:11px}
+.sosio-matrix thead th:first-child{text-align:left;min-width:120px}
+.sosio-matrix tbody td{padding:7px 10px;text-align:center;border-bottom:1px solid var(--bd);font-size:12px}
+.sosio-matrix tbody td:first-child{text-align:left;font-weight:500;background:var(--sf2)}
+.sosio-matrix tbody tr:last-child td{border-bottom:none}
+.cell-pick{background:var(--acs);color:var(--ac2);font-weight:700;border-radius:4px}
+.cell-self{background:var(--sf3);color:var(--tx3)}
+.sosio-legend{display:flex;gap:12px;flex-wrap:wrap;margin-bottom:14px;font-size:12px}
+.leg-item{display:flex;align-items:center;gap:6px}
+/* Sosiogram simple */
+.sosio-rank-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-bottom:20px}
+.rank-card{background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:14px;display:flex;align-items:center;gap:12px}
+.rank-num{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;flex-shrink:0}
+.rn1{background:var(--gold);color:#000}.rn2{background:var(--tx2);color:#000}.rn3{background:rgba(205,127,50,.7);color:#fff}.rn4{background:var(--sf3);color:var(--tx3)}
+.rank-info{flex:1}
+.rank-nama{font-size:14px;font-weight:500}
+.rank-count{font-size:12px;color:var(--tx3)}
+.sosio-alert{background:var(--reds);border:1px solid rgba(240,107,107,.2);border-radius:var(--rsm);padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--red)}
+.sosio-isolated{background:var(--ambers);border:1px solid rgba(240,185,91,.2);border-radius:var(--rsm);padding:12px 16px;margin-bottom:14px;font-size:13px;color:var(--amber)}
+
+/* SECTION TABS */
+.stabs{display:flex;gap:4px;background:var(--sf3);border-radius:10px;padding:4px;margin-bottom:20px}
+.stab{flex:1;padding:9px 14px;border:none;border-radius:7px;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;cursor:pointer;transition:var(--tr);color:var(--tx3);background:none}
+.stab.a-ak{background:var(--ac);color:#fff}
+.stab.a-so{background:var(--pink);color:#fff}
+
+/* UTILS */
+.flex{display:flex}.ic{align-items:center}.jb{justify-content:space-between}
+.g8{gap:8px}.g12{gap:12px}.g16{gap:16px}
+.mb8{margin-bottom:8px}.mb16{margin-bottom:16px}.mb24{margin-bottom:24px}.mt12{margin-top:12px}
+.ts{font-size:13px}.tx{font-size:12px}.tm{color:var(--tx3)}
+.fi{animation:fadeI .3s ease}
+@keyframes fadeI{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+.tpl{background:var(--acs);color:var(--ac2)}.tpg{background:var(--purples);color:var(--purple)}.tpl2{background:var(--ambers);color:var(--amber)}.tis{background:var(--teals);color:var(--teal)}.tes{background:var(--teals);color:var(--teal)}.tra{background:var(--golds);color:var(--gold)}.tsl{background:var(--greens);color:var(--green)}.tur{background:var(--reds);color:var(--red)}.tso{background:var(--pinks);color:var(--pink)}
+
+/* MOBILE */
+.mnav{display:none;background:var(--sf);border-top:1px solid var(--bd);padding:5px;gap:1px;position:sticky;bottom:0;z-index:50}
+.mnav .ni{flex-direction:column;gap:1px;font-size:9px;flex:1;justify-content:center;padding:5px 2px}
+.mnav .nic{font-size:16px;width:auto}
+
+@media(max-width:768px){
+  .sb{display:none}.mc{padding:14px}
+  .sg{grid-template-columns:repeat(2,1fr)}
+  .ssc{padding:16px}.tb{padding:0 14px}
+  .tb-us{display:none}.cg,.pg-grid{grid-template-columns:1fr}
+  .mnav{display:flex}.fr{grid-template-columns:1fr}
+  .lkr{gap:4px}.spg{grid-template-columns:1fr}.jg{grid-template-columns:1fr}
+  .bidang-score-grid{grid-template-columns:1fr}
+  .sosio-rank-grid{grid-template-columns:1fr 1fr}
+}
+@media(max-width:480px){.sg{grid-template-columns:1fr}.sosio-rank-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="toast"></div>
+
+<!-- ════ LOGIN ════ -->
+<div class="pg active" id="pg-login">
+  <div class="lw">
+    <div class="llo">
+      <div class="llo-ic">🎓</div>
+      <div class="lb">BK Smart</div>
+      <div class="ltag">Sistem Angket AKPD & Sosiometri</div>
+    </div>
+    <div class="lc">
+      <div class="ltabs">
+        <button class="ltab active" onclick="switchTab('siswa')">🎓 Siswa</button>
+        <button class="ltab" onclick="switchTab('guru')">👩‍🏫 Guru BK</button>
+      </div>
+      <div id="fS">
+        <div class="fg"><label>NIS</label><input class="inp" id="inNIS" placeholder="Masukkan NIS" value="10001"></div>
+        <div class="fg"><label>Password</label><input class="inp" id="inPS" type="password" value="siswa123"></div>
+        <button class="btn btn-p btn-lg wf" onclick="loginSiswa()">Masuk sebagai Siswa</button>
+        <div class="lft">Contoh: NIS <strong>10001</strong> / <strong>siswa123</strong></div>
+      </div>
+      <div id="fG" style="display:none">
+        <div class="fg"><label>NIP</label><input class="inp" id="inNIP" placeholder="Masukkan NIP" value="98765"></div>
+        <div class="fg"><label>Password</label><input class="inp" id="inPG" type="password" value="guru123"></div>
+        <button class="btn btn-p btn-lg wf" onclick="loginGuru()">Masuk sebagai Guru BK</button>
+        <div class="lft">NIP <strong>98765</strong> / <strong>guru123</strong></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════ SISWA ════ -->
+<div class="pg" id="pg-siswa">
+  <div class="ash">
+    <div class="tb"><div class="tb-br"><div class="tb-ic">🎓</div><span class="tb-tt">BK Smart</span></div>
+      <div class="tb-ri"><span class="tb-us">Halo, <strong id="sNTop">—</strong></span><button class="btn btn-g btn-sm" onclick="logout()">Keluar</button></div>
+    </div>
+    <div class="ssh"><div class="ssc">
+      <div class="stind">
+        <div class="stel active" id="stEl1"><div class="stnum" id="stN1">1</div><span>Jenis</span></div><div class="stln"></div>
+        <div class="stel" id="stEl2"><div class="stnum" id="stN2">2</div><span>Paket</span></div><div class="stln"></div>
+        <div class="stel" id="stEl3"><div class="stnum" id="stN3">3</div><span>Isi</span></div><div class="stln"></div>
+        <div class="stel" id="stEl4"><div class="stnum" id="stN4">4</div><span>Selesai</span></div>
+      </div>
+      <div id="ss1" class="fi">
+        <div style="margin-bottom:24px"><div class="pt" style="font-size:22px" id="sWelc">Selamat Datang!</div><div class="ts tm" id="sKls">Pilih jenis angket</div></div>
+        <div class="jg">
+          <div class="jc ak" onclick="pilihJenis('akpd')"><div class="jic">📋</div><div class="jtt">AKPD</div><div class="jds">Angket Kebutuhan Peserta Didik — 4 bidang: Pribadi, Sosial, Belajar, dan Karier</div><div class="jbdg jbdg-ak">Angket Kebutuhan</div></div>
+          <div class="jc so" onclick="pilihJenis('sosiometri')"><div class="jic">🤝</div><div class="jtt">Sosiometri</div><div class="jds">Mengukur pola hubungan sosial dan interaksi antar siswa dalam kelompok kelas</div><div class="jbdg jbdg-so">Pemetaan Sosial</div></div>
+        </div>
+      </div>
+      <div id="ss2" style="display:none" class="fi">
+        <div class="flex jb ic mb16" style="flex-wrap:wrap;gap:10px">
+          <div><div class="pt" style="font-size:20px" id="ss2T">Pilih Paket</div><div class="ts tm" id="ss2S">Pilih paket yang ingin diisi</div></div>
+          <button class="btn btn-g btn-sm" onclick="showStep(1)">← Kembali</button>
+        </div>
+        <div class="spg" id="sPG"></div>
+      </div>
+      <div id="ss3" style="display:none" class="fi">
+        <div class="flex jb ic mb24" style="flex-wrap:wrap;gap:10px">
+          <div><div class="pt" style="font-size:20px" id="sAN">Angket</div><div class="ts tm" id="sProg">0 / 0 dijawab</div></div>
+          <button class="btn btn-g btn-sm" onclick="backToPaket()">← Kembali</button>
+        </div>
+        <div id="sForm"></div>
+        <button class="btn btn-p btn-lg wf" style="margin-top:8px" onclick="kirimAngket()">📤 Kirim Angket</button>
+      </div>
+      <div id="ss4" style="display:none" class="fi">
+        <div style="text-align:center;padding:56px 20px">
+          <div style="font-size:68px;margin-bottom:18px">🎉</div>
+          <div class="pt" style="margin-bottom:10px">Angket Terkirim!</div>
+          <p class="ts tm" style="max-width:340px;margin:0 auto 28px">Terima kasih! Jawaban Anda telah tersimpan dan akan diproses Guru BK.</p>
+          <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap">
+            <button class="btn btn-p" onclick="isiLagi()">📋 Isi Angket Lain</button>
+            <button class="btn btn-g" onclick="logout()">Keluar</button>
+          </div>
+        </div>
+      </div>
+    </div></div>
+  </div>
+</div>
+
+<!-- ════ GURU ════ -->
+<div class="pg" id="pg-guru">
+  <div class="ash">
+    <div class="tb"><div class="tb-br"><div class="tb-ic">🎓</div><span class="tb-tt">BK Smart — Guru BK</span></div>
+      <div class="tb-ri"><span class="tb-us">Halo, <strong id="gNTop">Guru BK</strong></span><button class="btn btn-g btn-sm" onclick="logout()">Keluar</button></div>
+    </div>
+    <div class="glay">
+      <aside class="sb">
+        <div class="sb-lbl">Utama</div>
+        <button class="ni active" onclick="gNav('dashboard')" id="gn-dashboard"><span class="nic">📊</span>Dashboard</button>
+        <button class="ni" onclick="gNav('data')" id="gn-data"><span class="nic">📋</span>Data Respons</button>
+        <div class="sb-lbl">Analisis</div>
+        <button class="ni" onclick="gNav('anal-akpd')" id="gn-anal-akpd"><span class="nic">📈</span>Analisis AKPD</button>
+        <button class="ni" onclick="gNav('anal-sosio')" id="gn-anal-sosio"><span class="nic">🕸️</span>Analisis Sosiometri</button>
+        <div class="sb-lbl">Kelola Soal</div>
+        <button class="ni" onclick="gNav('akpd')" id="gn-akpd"><span class="nic">📝</span>Soal AKPD</button>
+        <button class="ni" onclick="gNav('sosio')" id="gn-sosio"><span class="nic">🤝</span>Soal Sosiometri</button>
+        <div class="sb-lbl">Manajemen</div>
+        <button class="ni" onclick="gNav('siswa')" id="gn-siswa"><span class="nic">👥</span>Data Siswa</button>
+        <button class="ni" onclick="gNav('kelas')" id="gn-kelas"><span class="nic">🏫</span>Data Kelas</button>
+      </aside>
+      <main class="mc">
+
+        <!-- DASHBOARD -->
+        <div class="gs active" id="gs-dashboard">
+          <div class="ph"><div class="pt">Dashboard</div><div class="ps">Ringkasan sistem BK Smart</div></div>
+          <div class="sg" id="sgrid"></div>
+          <div class="flex" style="gap:20px;flex-wrap:wrap">
+            <div style="flex:1;min-width:260px"><div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:12px">📋 Progres AKPD per Kelas</div><div class="cg" style="margin-top:0" id="cgAKPD"></div></div>
+            <div style="flex:1;min-width:260px"><div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:12px">🤝 Progres Sosiometri per Kelas</div><div class="cg" style="margin-top:0" id="cgSosio"></div></div>
+          </div>
+        </div>
+
+        <!-- DATA RESPONS -->
+        <div class="gs" id="gs-data">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Data Respons</div><div class="ps">Rekap semua jawaban angket siswa</div></div>
+            <button class="btn btn-gold" onclick="eksporData()">⬇️ Ekspor CSV</button>
+          </div>
+          <div class="stabs"><button class="stab a-ak" id="dtAK" onclick="switchDTab('akpd')">📋 AKPD</button><button class="stab" id="dtSO" onclick="switchDTab('sosiometri')">🤝 Sosiometri</button></div>
+          <div class="tlb">
+            <div class="sw"><span class="si">🔍</span><input class="inp" id="srD" placeholder="Cari nama/NIS..." oninput="renderTblData()"></div>
+            <select class="sel" id="fKD" style="width:150px" onchange="renderTblData()"><option value="">Semua Kelas</option></select>
+            <select class="sel" id="fPD" style="width:180px" onchange="renderTblData()"><option value="">Semua Paket</option></select>
+            <select class="sel" id="fSD" style="width:140px" onchange="renderTblData()"><option value="">Semua Status</option><option value="sudah">Sudah Isi</option><option value="belum">Belum Isi</option></select>
+          </div>
+          <div class="tw"><table><thead><tr><th>#</th><th>Nama</th><th>NIS</th><th>Kelas</th><th>Paket</th><th>Tanggal</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tblDB"></tbody></table></div>
+        </div>
+
+        <!-- ANALISIS AKPD -->
+        <div class="gs" id="gs-anal-akpd">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Analisis AKPD</div><div class="ps">Hasil analisis kebutuhan siswa per 4 bidang BK</div></div>
+            <button class="btn btn-gold" onclick="eksporAnalisisAKPD()">⬇️ Ekspor PDF-ready</button>
+          </div>
+          <!-- Filter -->
+          <div class="analisis-kelas-sel">
+            <select class="sel" id="anAKPDkelas" style="width:180px" onchange="renderAnalisisAKPD()"><option value="SEMUA">🌐 Semua Kelas</option></select>
+            <select class="sel" id="anAKPDpaket" style="width:220px" onchange="renderAnalisisAKPD()"><option value="">Semua Paket AKPD</option></select>
+          </div>
+          <!-- Bidang Tabs -->
+          <div class="bidang-tabs">
+            <button class="btab act-all" onclick="switchBidang('all')" id="bAll">📊 Ringkasan</button>
+            <button class="btab" onclick="switchBidang('pribadi')" id="bPR">🧑 Pribadi</button>
+            <button class="btab" onclick="switchBidang('sosial')" id="bSO">👥 Sosial</button>
+            <button class="btab" onclick="switchBidang('belajar')" id="bBL">📚 Belajar</button>
+            <button class="btab" onclick="switchBidang('karier')" id="bKA">💼 Karier</button>
+          </div>
+          <div id="analAKPDContent"></div>
+        </div>
+
+        <!-- ANALISIS SOSIOMETRI -->
+        <div class="gs" id="gs-anal-sosio">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Analisis Sosiometri</div><div class="ps">Pemetaan hubungan sosial antar siswa per kelas</div></div>
+            <button class="btn btn-gold" onclick="eksporSosio()">⬇️ Ekspor CSV</button>
+          </div>
+          <div class="analisis-kelas-sel">
+            <select class="sel" id="anSosioKelas" style="width:180px" onchange="renderAnalisisSosio()"><option value="">Pilih Kelas</option></select>
+            <select class="sel" id="anSosioPaket" style="width:230px" onchange="renderAnalisisSosio()"><option value="">Semua Paket Sosiometri</option></select>
+          </div>
+          <div id="analSosioContent"></div>
+        </div>
+
+        <!-- SOAL AKPD -->
+        <div class="gs" id="gs-akpd">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Soal AKPD</div><div class="ps">Paket soal dibagi per 4 bidang BK</div></div>
+            <button class="btn btn-p" onclick="openBuatPaket('akpd')">+ Buat Paket AKPD</button>
+          </div>
+          <div class="bidang-tabs">
+            <button class="btab act-all" onclick="filterAKPDBidang('semua')" id="fAll">📦 Semua</button>
+            <button class="btab" onclick="filterAKPDBidang('pribadi')" id="fPR">🧑 Pribadi</button>
+            <button class="btab" onclick="filterAKPDBidang('sosial')" id="fSO">👥 Sosial</button>
+            <button class="btab" onclick="filterAKPDBidang('belajar')" id="fBL">📚 Belajar</button>
+            <button class="btab" onclick="filterAKPDBidang('karier')" id="fKA">💼 Karier</button>
+          </div>
+          <div class="pg-grid" id="pgAKPD"></div>
+        </div>
+
+        <!-- SOAL SOSIO -->
+        <div class="gs" id="gs-sosio">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Soal Sosiometri</div><div class="ps">Kelola paket pemetaan hubungan sosial</div></div>
+            <button class="btn btn-pink" onclick="openBuatPaket('sosiometri')">+ Buat Paket Sosiometri</button>
+          </div>
+          <div class="pg-grid" id="pgSosio"></div>
+        </div>
+
+        <!-- DATA SISWA -->
+        <div class="gs" id="gs-siswa">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Data Siswa</div><div class="ps">NIS digunakan untuk login — lengkap dengan nama dan kelas</div></div>
+            <button class="btn btn-p" onclick="openAddSiswa()">+ Tambah Siswa</button>
+          </div>
+          <div class="tlb">
+            <div class="sw"><span class="si">🔍</span><input class="inp" id="srS" placeholder="Cari nama atau NIS..." oninput="renderTblSiswa()"></div>
+            <select class="sel" id="fKS" style="width:150px" onchange="renderTblSiswa()"><option value="">Semua Kelas</option></select>
+          </div>
+          <div class="tw"><table><thead><tr><th>#</th><th>Nama Siswa</th><th>NIS</th><th>Kelas</th><th>Password</th><th>Status</th><th>Aksi</th></tr></thead><tbody id="tblSB"></tbody></table></div>
+        </div>
+
+        <!-- DATA KELAS -->
+        <div class="gs" id="gs-kelas">
+          <div class="ph flex jb ic" style="flex-wrap:wrap;gap:12px">
+            <div><div class="pt">Data Kelas</div><div class="ps">Kelola daftar kelas sekolah</div></div>
+            <button class="btn btn-p" onclick="openAddKelas()">+ Tambah Kelas</button>
+          </div>
+          <div class="tw"><table><thead><tr><th>#</th><th>Nama Kelas</th><th>Jumlah Siswa</th><th>Aksi</th></tr></thead><tbody id="tblKB"></tbody></table></div>
+        </div>
+
+      </main>
+    </div>
+    <nav class="mnav">
+      <button class="ni active" onclick="gNav('dashboard')" id="mg-dashboard"><span class="nic">📊</span>Home</button>
+      <button class="ni" onclick="gNav('anal-akpd')" id="mg-anal-akpd"><span class="nic">📈</span>AKPD</button>
+      <button class="ni" onclick="gNav('anal-sosio')" id="mg-anal-sosio"><span class="nic">🕸️</span>Sosio</button>
+      <button class="ni" onclick="gNav('siswa')" id="mg-siswa"><span class="nic">👥</span>Siswa</button>
+    </nav>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mo" id="mDetail"><div class="md md-w">
+  <div class="mhd"><div><div class="mtt" id="mDN">Detail</div><div class="ts tm" id="mDI"></div></div><button class="mclose" onclick="cm('mDetail')">✕</button></div>
+  <div id="mDB"></div>
+</div></div>
+
+<div class="mo" id="mPaket"><div class="md">
+  <div class="mhd"><div class="mtt" id="mPT">Buat Paket</div><button class="mclose" onclick="cm('mPaket')">✕</button></div>
+  <input type="hidden" id="mPJ"><input type="hidden" id="mPID">
+  <div class="fg"><label>Nama Paket</label><input class="inp" id="inNP" placeholder="contoh: Angket Pribadi Kelas X"></div>
+  <div class="fg"><label>Deskripsi</label><textarea class="inp" id="inDP" rows="2" placeholder="Penjelasan singkat..."></textarea></div>
+  <div class="fr">
+    <div class="fg"><label>Bidang (AKPD)</label><select class="sel" id="inBP"><option value="pribadi">🧑 Pribadi</option><option value="sosial">👥 Sosial</option><option value="belajar">📚 Belajar</option><option value="karier">💼 Karier</option></select></div>
+    <div class="fg"><label>Warna</label><select class="sel" id="inCP"><option value="bl">🔵 Biru</option><option value="go">🟡 Emas</option><option value="pu">🟣 Ungu</option><option value="gn">🟢 Hijau</option><option value="te">🩵 Teal</option><option value="pk">🩷 Pink</option><option value="am">🟠 Amber</option></select></div>
+  </div>
+  <div class="fr">
+    <div class="fg"><label>Ikon</label><select class="sel" id="inIP"><option value="📋">📋 Clipboard</option><option value="📝">📝 Catatan</option><option value="🎯">🎯 Target</option><option value="💡">💡 Ide</option><option value="🧠">🧠 Otak</option><option value="❤️">❤️ Hati</option><option value="🤝">🤝 Jabat Tangan</option><option value="🌟">🌟 Bintang</option><option value="💼">💼 Karier</option><option value="📚">📚 Buku</option><option value="🏫">🏫 Sekolah</option></select></div>
+    <div></div>
+  </div>
+  <div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-g" onclick="cm('mPaket')">Batal</button><button class="btn btn-p" onclick="simpanPaket()">Simpan</button></div>
+</div></div>
+
+<div class="mo" id="mKS"><div class="md md-w">
+  <div class="mhd"><div><div class="mtt" id="mKST">Kelola Soal</div><div class="ts tm" id="mKSI"></div></div><button class="mclose" onclick="cm('mKS')">✕</button></div>
+  <div class="flex jb ic mb16" style="flex-wrap:wrap;gap:8px">
+    <span class="ts tm" id="jmlSL">0 soal</span>
+    <button class="btn btn-p btn-sm" onclick="openAddSoal()">+ Tambah Soal</button>
+  </div>
+  <div class="sll" id="soalLP"></div>
+</div></div>
+
+<div class="mo" id="mSoal"><div class="md md-w">
+  <div class="mhd"><div class="mtt" id="mSoalT">Tambah Soal</div><button class="mclose" onclick="cm('mSoal')">✕</button></div>
+  <input type="hidden" id="mSJ">
+  <div class="fg"><label>Teks Pertanyaan</label><textarea class="inp" id="inTS" rows="3" placeholder="Tulis pertanyaan..."></textarea></div>
+  <div class="fg"><label>Tipe Soal</label>
+    <select class="sel" id="inTiS" onchange="onTipe()">
+      <option value="pilihan">🔘 Pilihan Ganda (satu jawaban)</option>
+      <option value="ganda">☑️ Pilihan Berganda (banyak jawaban)</option>
+      <option value="likert">📊 Skala Likert 1–5</option>
+      <option value="isian">✍️ Isian Singkat</option>
+      <option value="esai">📄 Esai / Isian Panjang</option>
+      <option value="rating">⭐ Rating Bintang 1–5</option>
+      <option value="slider">🎚️ Slider Nilai</option>
+      <option value="urutan">🔢 Mengurutkan Pilihan</option>
+      <option value="sosio_pilih">🤝 Pilih Teman (Sosiometri)</option>
+    </select>
+  </div>
+  <div id="opC" class="fg"><label>Pilihan Jawaban</label><div class="olb" id="opLB"></div><button class="bao" onclick="addOpsi()">+ Tambah Pilihan</button></div>
+  <div id="soC" style="display:none" class="fg"><label>Jumlah teman yang dipilih</label><select class="sel" id="inSJml"><option value="1">1 teman</option><option value="2" selected>2 teman</option><option value="3">3 teman</option><option value="4">4 teman</option><option value="5">5 teman</option></select><div class="tx tm" style="margin-top:6px">💡 Siswa memilih dari daftar teman sekelas</div></div>
+  <div id="lkC" style="display:none" class="fg"><label>Label Skala</label><div class="fr"><div><label style="font-size:11px">Label Kiri (1)</label><input class="inp" id="lKi" value="Sangat Tidak Setuju"></div><div><label style="font-size:11px">Label Kanan (5)</label><input class="inp" id="lKa" value="Sangat Setuju"></div></div></div>
+  <div id="slC" style="display:none"><div class="fr"><div class="fg"><label style="font-size:11px">Min</label><input class="inp" id="sMn" type="number" value="0"></div><div class="fg"><label style="font-size:11px">Max</label><input class="inp" id="sMx" type="number" value="100"></div></div><div class="fr"><div class="fg"><label style="font-size:11px">Default</label><input class="inp" id="sDF" type="number" value="50"></div><div class="fg"><label style="font-size:11px">Satuan</label><input class="inp" id="sUT" placeholder="%"></div></div></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end;margin-top:8px"><button class="btn btn-g" onclick="cm('mSoal')">Batal</button><button class="btn btn-p" onclick="simpanSoal()">Simpan Soal</button></div>
+</div></div>
+
+<div class="mo" id="mSiswa"><div class="md">
+  <div class="mhd"><div class="mtt" id="mSiswaT">Tambah Siswa</div><button class="mclose" onclick="cm('mSiswa')">✕</button></div>
+  <div class="fr"><div class="fg"><label>Nama Lengkap</label><input class="inp" id="inNS" placeholder="Nama siswa"></div><div class="fg"><label>NIS</label><input class="inp" id="inNiS" placeholder="Nomor Induk Siswa"></div></div>
+  <div class="fr"><div class="fg"><label>Kelas</label><select class="sel" id="inKS"></select></div><div class="fg"><label>Password</label><input class="inp" id="inPaS" placeholder="Min. 6 karakter"></div></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-g" onclick="cm('mSiswa')">Batal</button><button class="btn btn-p" onclick="simpanSiswa()">Simpan</button></div>
+</div></div>
+
+<div class="mo" id="mKelas"><div class="md" style="max-width:400px">
+  <div class="mhd"><div class="mtt" id="mKelasT">Tambah Kelas</div><button class="mclose" onclick="cm('mKelas')">✕</button></div>
+  <div class="fg"><label>Nama Kelas</label><input class="inp" id="inNK" placeholder="contoh: X IPA 1"></div>
+  <div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-g" onclick="cm('mKelas')">Batal</button><button class="btn btn-p" onclick="simpanKelas()">Simpan</button></div>
+</div></div>
+
+<div class="mo" id="mHapus"><div class="md" style="max-width:400px">
+  <div class="mhd"><div class="mtt">Konfirmasi Hapus</div><button class="mclose" onclick="cm('mHapus')">✕</button></div>
+  <p class="ts tm mb24" id="mHD">Yakin ingin menghapus?</p>
+  <div style="display:flex;gap:10px;justify-content:flex-end"><button class="btn btn-g" onclick="cm('mHapus')">Batal</button><button class="btn btn-d" id="btnHOK">Hapus</button></div>
+</div></div>
+
+<script>
+// ════════════════════════════════════════════════════
+//   DATABASE
+// ════════════════════════════════════════════════════
+const BIDANG = {
+  pribadi: {label:'Pribadi',icon:'🧑',color:'green',pfClass:'pf-gn',btnClass:'act-pr'},
+  sosial:  {label:'Sosial', icon:'👥',color:'amber',pfClass:'pf-am',btnClass:'act-so'},
+  belajar: {label:'Belajar',icon:'📚',color:'purple',pfClass:'pf-pu',btnClass:'act-bl'},
+  karier:  {label:'Karier', icon:'💼',color:'teal',pfClass:'pf-te',btnClass:'act-ka'},
+};
+
+const initDB = {
+  _id:500,
+  kelasList:['X IPA 1','X IPA 2','X IPS 1','X IPS 2','XI IPA 1','XI IPA 2','XI IPS 1','XI IPS 2'],
+  siswaList:[
+    {id:1,nama:'Andi Pratama',nis:'10001',kelas:'X IPA 1',password:'siswa123',aktif:true},
+    {id:2,nama:'Budi Santoso',nis:'10002',kelas:'X IPA 1',password:'siswa123',aktif:true},
+    {id:3,nama:'Citra Dewi',nis:'10003',kelas:'X IPA 1',password:'siswa123',aktif:true},
+    {id:4,nama:'Dina Maharani',nis:'10004',kelas:'X IPA 1',password:'siswa123',aktif:true},
+    {id:5,nama:'Eko Wahyudi',nis:'10005',kelas:'X IPA 2',password:'siswa123',aktif:true},
+    {id:6,nama:'Farah Nadia',nis:'10006',kelas:'X IPA 2',password:'siswa123',aktif:true},
+    {id:7,nama:'Galih Prabowo',nis:'10007',kelas:'XI IPA 1',password:'siswa123',aktif:true},
+    {id:8,nama:'Hana Permata',nis:'10008',kelas:'XI IPA 1',password:'siswa123',aktif:true},
+    {id:9,nama:'Ivan Kurniawan',nis:'10009',kelas:'XI IPS 1',password:'siswa123',aktif:true},
+    {id:10,nama:'Jeni Putri',nis:'10010',kelas:'XI IPS 1',password:'siswa123',aktif:true},
+  ],
+  guruList:[{nip:'98765',password:'guru123',nama:'Ibu Sri Wahyuni, S.Pd'}],
+  akpdList:[
+    {id:1,jenis:'akpd',bidang:'pribadi',nama:'Angket Kebutuhan Pribadi',desc:'Menggali kebutuhan siswa di bidang perkembangan pribadi dan emosi',icon:'❤️',color:'gn',soal:[
+      {id:1,teks:'Saya mampu mengelola emosi dengan baik dalam situasi sulit',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:2,teks:'Saya merasa percaya diri dalam kehidupan sehari-hari',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:3,teks:'Apa yang paling ingin Anda kembangkan dari diri sendiri?',tipe:'pilihan',opsi:['Kepercayaan diri','Kedisiplinan','Manajemen waktu','Kesehatan fisik'],config:{}},
+      {id:4,teks:'Seberapa puas Anda dengan perkembangan diri Anda?',tipe:'rating',opsi:[],config:{}},
+      {id:5,teks:'Kendala pribadi yang sering Anda hadapi',tipe:'esai',opsi:[],config:{}},
+    ]},
+    {id:2,jenis:'akpd',bidang:'sosial',nama:'Angket Kebutuhan Sosial',desc:'Menggali kebutuhan siswa di bidang hubungan sosial dan komunikasi',icon:'👥',color:'am',soal:[
+      {id:6,teks:'Saya merasa nyaman berinteraksi dengan teman-teman di sekolah',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:7,teks:'Saya mudah bergaul dengan orang yang baru saya kenal',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:8,teks:'Apa kendala utama Anda dalam bergaul?',tipe:'pilihan',opsi:['Sulit memulai percakapan','Takut ditolak','Beda minat dengan teman','Tidak ada kendala'],config:{}},
+      {id:9,teks:'Hobi yang Anda minati (boleh lebih dari satu)',tipe:'ganda',opsi:['Olahraga','Seni & Musik','Membaca','Teknologi','Memasak','Lainnya'],config:{}},
+      {id:10,teks:'Seberapa puas dengan kehidupan sosial di sekolah?',tipe:'rating',opsi:[],config:{}},
+    ]},
+    {id:3,jenis:'akpd',bidang:'belajar',nama:'Angket Kebutuhan Belajar',desc:'Menggali kebutuhan siswa di bidang akademik dan kegiatan belajar',icon:'📚',color:'pu',soal:[
+      {id:11,teks:'Saya memahami materi pelajaran yang diajarkan di sekolah',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:12,teks:'Saya memiliki strategi belajar yang efektif',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:13,teks:'Seberapa besar motivasi belajar Anda saat ini?',tipe:'slider',opsi:[],config:{min:0,max:100,default:60,unit:'%'}},
+      {id:14,teks:'Mata pelajaran yang paling sulit bagi saya',tipe:'isian',opsi:[],config:{}},
+      {id:15,teks:'Kesulitan belajar yang sering dihadapi',tipe:'pilihan',opsi:['Sulit berkonsentrasi','Kurang waktu belajar','Materi terlalu sulit','Tidak ada kesulitan'],config:{}},
+    ]},
+    {id:4,jenis:'akpd',bidang:'karier',nama:'Angket Kebutuhan Karier',desc:'Menggali kebutuhan siswa di bidang perencanaan karier dan masa depan',icon:'💼',color:'te',soal:[
+      {id:16,teks:'Saya memiliki cita-cita yang jelas untuk masa depan',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:17,teks:'Saya mengetahui potensi dan bakat yang saya miliki',tipe:'likert',opsi:[],config:{labelKiri:'Sangat Tidak Setuju',labelKanan:'Sangat Setuju'}},
+      {id:18,teks:'Urutkan bidang karier yang paling Anda minati',tipe:'urutan',opsi:['Teknik & Sains','Seni & Kreatif','Bisnis & Ekonomi','Kesehatan','Pendidikan','Hukum & Sosial'],config:{}},
+      {id:19,teks:'Jenjang pendidikan yang ingin ditempuh setelah lulus',tipe:'pilihan',opsi:['Kuliah S1','Sekolah Kedinasan','Kursus/Vokasi','Langsung bekerja'],config:{}},
+      {id:20,teks:'Hal yang paling dibutuhkan untuk meraih karier impian',tipe:'esai',opsi:[],config:{}},
+    ]},
+  ],
+  sosioList:[
+    {id:101,jenis:'sosiometri',nama:'Sosiometri Belajar',desc:'Pemetaan teman pilihan untuk belajar bersama dan kerja kelompok',icon:'🤝',color:'pk',soal:[
+      {id:201,teks:'Siapa teman yang paling ingin kamu ajak belajar bersama?',tipe:'sosio_pilih',opsi:[],config:{jumlah:2}},
+      {id:202,teks:'Siapa teman yang paling nyaman untuk kerja kelompok?',tipe:'sosio_pilih',opsi:[],config:{jumlah:2}},
+      {id:203,teks:'Siapa yang menurutmu paling rajin belajar di kelas?',tipe:'sosio_pilih',opsi:[],config:{jumlah:1}},
+    ]},
+    {id:102,jenis:'sosiometri',nama:'Sosiometri Pergaulan',desc:'Pemetaan hubungan pertemanan dan interaksi sosial di kelas',icon:'🌟',color:'te',soal:[
+      {id:204,teks:'Siapa teman yang paling akrab denganmu di kelas?',tipe:'sosio_pilih',opsi:[],config:{jumlah:3}},
+      {id:205,teks:'Siapa teman yang sering kamu ajak bermain/ngobrol?',tipe:'sosio_pilih',opsi:[],config:{jumlah:2}},
+      {id:206,teks:'Jika ada masalah, siapa teman yang kamu percaya untuk curhat?',tipe:'sosio_pilih',opsi:[],config:{jumlah:1}},
+    ]},
+  ],
+  jawaban:[],
+};
+
+let DB = JSON.parse(JSON.stringify(initDB));
+function loadDB(){try{const s=localStorage.getItem('bksmart_v2');if(s){const p=JSON.parse(s);['_id','kelasList','siswaList','akpdList','sosioList','jawaban'].forEach(k=>{if(p[k]!==undefined)DB[k]=p[k];});}}catch(e){}}
+function saveDB(){try{localStorage.setItem('bksmart_v2',JSON.stringify(DB));}catch(e){}}
+loadDB();
+
+// ════ STATE ════
+let me=null,jState=null,curPaketId=null;
+let editPaketId=null,activePSoal=null,editSoalId=null;
+let editSiswaId=null,editKelasOld=null;
+let dTab='akpd',curBidang='all',curAKPDFilter='semua';
+let ans={},gandaSt={},urtSt={},sosioSt={};
+let dragSrc=null;
+
+// ════ HELPERS ════
+function uid(){return ++DB._id;}
+function sp(id){document.querySelectorAll('.pg').forEach(p=>p.classList.remove('active'));document.getElementById(id).classList.add('active');}
+function om(id){document.getElementById(id).classList.add('open');}
+function cm(id){document.getElementById(id).classList.remove('open');}
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',e=>{if(e.target===o)o.classList.remove('open');}));
+function toast(msg,type='info'){
+  const ic={success:'✅',error:'❌',info:'ℹ️'};
+  const el=document.createElement('div');el.className=`ti ${type}`;
+  el.innerHTML=`<span>${ic[type]}</span><span>${msg}</span>`;
+  document.getElementById('toast').appendChild(el);setTimeout(()=>el.remove(),3500);
+}
+const TL={pilihan:'🔘 Pilihan Ganda',ganda:'☑️ Berganda',likert:'📊 Likert',isian:'✍️ Isian',esai:'📄 Esai',rating:'⭐ Rating',slider:'🎚️ Slider',urutan:'🔢 Urutan',sosio_pilih:'🤝 Pilih Teman'};
+const TC={pilihan:'tpl',ganda:'tpg',likert:'tpl2',isian:'tis',esai:'tes',rating:'tra',slider:'tsl',urutan:'tur',sosio_pilih:'tso'};
+function tl(t){return TL[t]||t;} function tc(t){return TC[t]||'bg-bl';}
+function getPL(j){return j==='akpd'?DB.akpdList:DB.sosioList;}
+function findPaket(id){return [...DB.akpdList,...DB.sosioList].find(p=>p.id===id);}
+function findSoal(id){return [...DB.akpdList,...DB.sosioList].flatMap(p=>p.soal).find(s=>s.id===id);}
+function getSekelas(kelas){return DB.siswaList.filter(s=>s.kelas===kelas&&s.id!==me?.id);}
+function colorToClass(c){return`c-${c||'bl'}`;}
+function pColorClass(p){const c=p.color||'bl';const m={gn:'pf-gn',am:'pf-am',pu:'pf-pu',te:'pf-te',bl:'pf-bl',pk:'pf-pk',go:'pf-go'};return m[c]||'pf-bl';}
+
+// ════ LOGIN ════
+function switchTab(r){
+  document.querySelectorAll('.ltab').forEach((t,i)=>t.classList.toggle('active',(r==='siswa'&&i===0)||(r==='guru'&&i===1)));
+  document.getElementById('fS').style.display=r==='siswa'?'':'none';
+  document.getElementById('fG').style.display=r==='guru'?'':'none';
+}
+function loginSiswa(){
+  const nis=document.getElementById('inNIS').value.trim();
+  const pass=document.getElementById('inPS').value.trim();
+  const s=DB.siswaList.find(x=>x.nis===nis&&x.password===pass&&x.aktif!==false);
+  if(!s){toast('NIS atau password salah','error');return;}
+  me=s;
+  document.getElementById('sNTop').textContent=s.nama;
+  document.getElementById('sWelc').textContent=`Halo, ${s.nama}! 👋`;
+  document.getElementById('sKls').textContent=`Kelas ${s.kelas} — Pilih jenis angket`;
+  showStep(1);sp('pg-siswa');toast(`Selamat datang, ${s.nama}!`,'success');
+}
+function loginGuru(){
+  const nip=document.getElementById('inNIP').value.trim();
+  const pass=document.getElementById('inPG').value.trim();
+  const g=DB.guruList.find(x=>x.nip===nip&&x.password===pass);
+  if(!g){toast('NIP atau password salah','error');return;}
+  me=g;document.getElementById('gNTop').textContent=g.nama;
+  gNav('dashboard');sp('pg-guru');toast(`Selamat datang, ${g.nama}!`,'success');
+}
+function logout(){me=null;jState=null;curPaketId=null;ans={};gandaSt={};urtSt={};sosioSt={};sp('pg-login');}
+
+// ════ SISWA ════
+function showStep(n){
+  [1,2,3,4].forEach(i=>{
+    document.getElementById(`ss${i}`).style.display=i===n?'':'none';
+    const el=document.getElementById(`stEl${i}`);const nm=document.getElementById(`stN${i}`);
+    el.classList.remove('active','done');
+    if(i<n){el.classList.add('done');nm.textContent='✓';}
+    else if(i===n){el.classList.add('active');nm.textContent=i;}
+    else nm.textContent=i;
+  });
+}
+function pilihJenis(j){
+  jState=j;
+  document.getElementById('ss2T').textContent=j==='akpd'?'Pilih Paket AKPD':'Pilih Paket Sosiometri';
+  renderSPaketGrid(j);showStep(2);
+}
+function renderSPaketGrid(j){
+  const list=getPL(j);
+  const g=document.getElementById('sPG');
+  if(!list.length){g.innerHTML=`<div class="emp" style="grid-column:1/-1"><div class="emp-i">${j==='akpd'?'📋':'🤝'}</div><div class="emp-t">Belum ada paket</div></div>`;return;}
+  g.innerHTML=list.map(p=>{
+    const sudah=DB.jawaban.some(jw=>jw.siswaId===me.id&&jw.paketId===p.id);
+    const c=`s-${p.color||'bl'}`;
+    const bdg=p.bidang?`<span class="bdg ${getBidangBdg(p.bidang)}" style="margin-bottom:8px;display:inline-flex">${BIDANG[p.bidang]?.icon||''} ${BIDANG[p.bidang]?.label||''}</span><br>`:'';
+    return `<div class="spc ${c} ${sudah?'done':''}" onclick="${sudah?'':(`pilihPaket(${p.id})`)}">
+      ${bdg}<div style="font-size:28px;margin-bottom:8px">${p.icon||'📋'}</div>
+      <div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:5px">${p.nama}</div>
+      <div style="font-size:13px;color:var(--tx3);margin-bottom:8px">${p.desc||''}</div>
+      <div style="font-size:12px;color:var(--tx3)">${p.soal?p.soal.length:0} pertanyaan</div>
+    </div>`;
+  }).join('');
+}
+function getBidangBdg(b){const m={pribadi:'bg-gn',sosial:'bg-am',belajar:'bg-pu',karier:'bg-te'};return m[b]||'bg-bl';}
+function pilihPaket(pid){
+  const p=findPaket(pid);if(!p||!p.soal||!p.soal.length){toast('Paket belum memiliki soal','error');return;}
+  curPaketId=pid;document.getElementById('sAN').textContent=p.nama;
+  ans={};gandaSt={};urtSt={};sosioSt={};
+  renderAngketForm(p);showStep(3);
+}
+function backToPaket(){curPaketId=null;renderSPaketGrid(jState);showStep(2);}
+function isiLagi(){showStep(1);}
+
+function renderAngketForm(paket){
+  const w=document.getElementById('sForm');
+  w.innerHTML=paket.soal.map((q,i)=>renderQ(q,i,paket)).join('');
+  paket.soal.filter(q=>q.tipe==='urutan').forEach(q=>{urtSt[q.id]=[...(q.opsi||[])];renderUrt(q.id);});
+  paket.soal.filter(q=>q.tipe==='slider').forEach(q=>{
+    const cfg=q.config||{};const el=document.getElementById(`sl_${q.id}`);
+    if(el){el.min=cfg.min??0;el.max=cfg.max??100;el.value=cfg.default??50;updSl(q.id,el.value,cfg.unit||'');ans[q.id]=parseInt(el.value);}
+  });
+  paket.soal.filter(q=>q.tipe==='sosio_pilih').forEach(q=>{sosioSt[q.id]=[];});
+  syncProg(paket);
+}
+function renderQ(q,idx,paket){
+  let body='';
+  if(q.tipe==='pilihan'){body=`<div class="qop" id="qop_${q.id}">${(q.opsi||[]).map((o,i)=>`<div class="qo" onclick="selP(${q.id},${i},this)"><div class="qrd"></div><span>${o}</span></div>`).join('')}</div>`;}
+  else if(q.tipe==='ganda'){body=`<div class="qop" id="qop_${q.id}">${(q.opsi||[]).map((o,i)=>`<div class="qco" onclick="togG(${q.id},${i},this)"><div class="qcb"></div><span>${o}</span></div>`).join('')}</div>`;}
+  else if(q.tipe==='likert'){const c=q.config||{};body=`<div class="lkr" id="lsc_${q.id}">${[1,2,3,4,5].map(v=>`<div class="lkb" onclick="selL(${q.id},${v},this)">${v}</div>`).join('')}</div><div class="lklbl"><span>${c.labelKiri||'Sangat Tidak Setuju'}</span><span>${c.labelKanan||'Sangat Setuju'}</span></div>`;}
+  else if(q.tipe==='isian'){body=`<input class="inp" id="is_${q.id}" placeholder="Tulis jawaban..." oninput="syncPN()">`;}
+  else if(q.tipe==='esai'){body=`<textarea class="inp" id="es_${q.id}" rows="4" placeholder="Tulis jawaban lengkap..." oninput="syncPN()"></textarea>`;}
+  else if(q.tipe==='rating'){body=`<div class="rrw" id="rat_${q.id}">${[1,2,3,4,5].map(v=>`<button class="sb2" onclick="selR(${q.id},${v})">⭐</button>`).join('')}</div>`;}
+  else if(q.tipe==='slider'){const c=q.config||{};body=`<div class="slwp"><div class="slvl" id="slv_${q.id}">${c.default??50}${c.unit||''}</div><input type="range" id="sl_${q.id}" oninput="updSl(${q.id},this.value,'${c.unit||''}');syncPN()"><div class="slends"><span>${c.min??0}${c.unit||''}</span><span>${c.max??100}${c.unit||''}</span></div></div>`;}
+  else if(q.tipe==='urutan'){body=`<div class="urtl" id="urt_${q.id}"></div><div class="tx tm mt12">💡 Gunakan ↑↓ atau drag untuk mengubah urutan</div>`;}
+  else if(q.tipe==='sosio_pilih'){
+    const c=q.config||{};const jml=c.jumlah||2;
+    const sk=getSekelas(me.kelas);
+    body=`<div class="sosiosel"><div class="sosiosel-l">Pilih maksimal <strong>${jml}</strong> teman dari kelas <strong>${me.kelas}</strong>:</div><div class="chips">${sk.map(s=>`<div class="chip" id="chip_${q.id}_${s.id}" onclick="togSosio(${q.id},${s.id},${jml},this)">${s.nama}</div>`).join('')||'<span class="ts tm">Tidak ada teman sekelas</span>'}</div></div>`;
+  }
+  return `<div class="qc" id="qc_${q.id}"><div class="qn">Pertanyaan ${idx+1}</div><div class="qt">${q.teks} <span style="color:var(--red);font-size:12px">*</span></div>${body}</div>`;
+}
+function selP(qid,idx,el){document.querySelectorAll(`#qop_${qid} .qo`).forEach(o=>o.classList.remove('sel'));el.classList.add('sel');const q=findSoal(qid);ans[qid]=q?q.opsi[idx]:'';syncPN();}
+function togG(qid,idx,el){if(!gandaSt[qid])gandaSt[qid]=new Set();el.classList.toggle('sel');const cb=el.querySelector('.qcb');if(el.classList.contains('sel')){gandaSt[qid].add(idx);cb.textContent='✓';}else{gandaSt[qid].delete(idx);cb.textContent='';}const q=findSoal(qid);ans[qid]=q?[...gandaSt[qid]].sort().map(i=>q.opsi[i]).join(', '):'';syncPN();}
+function selL(qid,val,el){document.querySelectorAll(`#lsc_${qid} .lkb`).forEach(b=>b.classList.remove('sel'));el.classList.add('sel');ans[qid]=val;syncPN();}
+function selR(qid,val){ans[qid]=val;const r=document.getElementById(`rat_${qid}`);if(r)[...r.children].forEach((b,i)=>b.classList.toggle('act',i<val));syncPN();}
+function updSl(qid,val,unit){const sv=document.getElementById(`slv_${qid}`);if(sv)sv.textContent=val+(unit||'');ans[qid]=parseInt(val);const sl=document.getElementById(`sl_${qid}`);if(sl){const mn=parseInt(sl.min),mx=parseInt(sl.max),v=parseInt(val);sl.style.setProperty('--pct',((v-mn)/(mx-mn))*100+'%');}}
+function togSosio(qid,sid,max,el){
+  if(!sosioSt[qid])sosioSt[qid]=[];
+  if(el.classList.contains('sel')){sosioSt[qid]=sosioSt[qid].filter(x=>x!==sid);el.classList.remove('sel');}
+  else{if(sosioSt[qid].length>=max){toast(`Maksimal ${max} teman`,'error');return;}sosioSt[qid].push(sid);el.classList.add('sel');}
+  const names=sosioSt[qid].map(id=>{const s=DB.siswaList.find(x=>x.id===id);return s?s.nama:'';}).filter(Boolean);
+  ans[qid]=names.join(', ');syncPN();
+}
+function renderUrt(qid){
+  const c=document.getElementById(`urt_${qid}`);if(!c)return;
+  const items=urtSt[qid]||[];
+  c.innerHTML=items.map((item,idx)=>`<div class="urti" draggable="true" ondragstart="dS(event,${qid},${idx})" ondragover="dO(event)" ondrop="dDrop(event,${qid},${idx})" ondragleave="dL(event)">
+    <span class="urth">⠿</span><div class="urtn">${idx+1}</div><span style="flex:1;font-size:14px">${item}</span>
+    <div style="display:flex;gap:4px">
+      ${idx>0?`<button class="btn btn-g btn-sm" style="padding:4px 8px" onclick="mvUrt(${qid},${idx},-1)">↑</button>`:'<span style="width:44px"></span>'}
+      ${idx<items.length-1?`<button class="btn btn-g btn-sm" style="padding:4px 8px" onclick="mvUrt(${qid},${idx},1)">↓</button>`:'<span style="width:44px"></span>'}
+    </div>
+  </div>`).join('');
+  ans[qid]=items.join(' → ');syncPN();
+}
+function mvUrt(qid,idx,dir){const a=urtSt[qid];const ni=idx+dir;if(ni<0||ni>=a.length)return;[a[idx],a[ni]]=[a[ni],a[idx]];renderUrt(qid);}
+function dS(e,qid,idx){dragSrc={qid,idx};}
+function dO(e){e.preventDefault();e.currentTarget.classList.add('dov');}
+function dL(e){e.currentTarget.classList.remove('dov');}
+function dDrop(e,qid,idx){e.preventDefault();e.currentTarget.classList.remove('dov');if(!dragSrc||dragSrc.qid!==qid||dragSrc.idx===idx)return;const a=urtSt[qid];const it=a.splice(dragSrc.idx,1)[0];a.splice(idx,0,it);dragSrc=null;renderUrt(qid);}
+function syncPN(){const p=findPaket(curPaketId);if(p)syncProg(p);}
+function syncProg(paket){
+  let a=0;
+  paket.soal.forEach(q=>{
+    if(q.tipe==='isian'){const el=document.getElementById(`is_${q.id}`);if(el&&el.value.trim()){ans[q.id]=el.value.trim();a++;}}
+    else if(q.tipe==='esai'){const el=document.getElementById(`es_${q.id}`);if(el&&el.value.trim()){ans[q.id]=el.value.trim();a++;}}
+    else if(q.tipe==='sosio_pilih'){if(sosioSt[q.id]&&sosioSt[q.id].length>0)a++;}
+    else if(ans[q.id]!==undefined)a++;
+  });
+  document.getElementById('sProg').textContent=`${a} / ${paket.soal.length} dijawab`;
+}
+function kirimAngket(){
+  const p=findPaket(curPaketId);if(!p)return;
+  p.soal.forEach(q=>{
+    if(q.tipe==='isian'){const el=document.getElementById(`is_${q.id}`);if(el)ans[q.id]=el.value.trim();}
+    if(q.tipe==='esai'){const el=document.getElementById(`es_${q.id}`);if(el)ans[q.id]=el.value.trim();}
+  });
+  let ok=true;
+  p.soal.forEach(q=>{
+    let has=false;
+    if(q.tipe==='sosio_pilih')has=sosioSt[q.id]&&sosioSt[q.id].length>0;
+    else has=ans[q.id]!==undefined&&String(ans[q.id]).trim()!=='';
+    if(!has){ok=false;const c=document.getElementById(`qc_${q.id}`);if(c){c.style.borderColor='var(--red)';setTimeout(()=>c.style.borderColor='',2500);}}
+  });
+  if(!ok){toast('Mohon lengkapi semua pertanyaan','error');return;}
+  DB.jawaban.push({id:uid(),siswaId:me.id,nama:me.nama,nis:me.nis,kelas:me.kelas,paketId:p.id,jenis:p.jenis,bidang:p.bidang||null,namaPaket:p.nama,tanggal:new Date().toLocaleDateString('id-ID'),jawaban:{...ans},sosioIds:{...sosioSt}});
+  saveDB();ans={};gandaSt={};urtSt={};sosioSt={};showStep(4);toast('Angket berhasil dikirim!','success');
+}
+
+// ════ GURU NAV ════
+function gNav(name){
+  document.querySelectorAll('.gs').forEach(s=>s.classList.remove('active'));
+  document.getElementById(`gs-${name}`).classList.add('active');
+  document.querySelectorAll('[id^="gn-"],[id^="mg-"]').forEach(n=>n.classList.remove('active'));
+  const gEl=document.getElementById(`gn-${name}`);const mEl=document.getElementById(`mg-${name}`);
+  if(gEl)gEl.classList.add('active');if(mEl)mEl.classList.add('active');
+  const map={
+    dashboard:renderDashboard,
+    data:()=>{renderTblData();popDataFilters();},
+    'anal-akpd':initAnalisisAKPD,
+    'anal-sosio':initAnalisisSosio,
+    akpd:()=>renderPaketGrid('akpd'),
+    sosio:()=>renderPaketGrid('sosiometri'),
+    siswa:()=>{renderTblSiswa();popSiswaFilter();},
+    kelas:renderTblKelas,
+  };
+  if(map[name])map[name]();
+}
+
+// ── DASHBOARD ──
+function renderDashboard(){
+  const total=DB.siswaList.length;
+  const sudahAK=new Set(DB.jawaban.filter(j=>j.jenis==='akpd').map(j=>j.siswaId)).size;
+  const sudahSO=new Set(DB.jawaban.filter(j=>j.jenis==='sosiometri').map(j=>j.siswaId)).size;
+  document.getElementById('sgrid').innerHTML=`
+    <div class="sc bl"><div class="sl">Total Siswa</div><div class="sv">${total}</div><div class="sd">Terdaftar</div></div>
+    <div class="sc gn"><div class="sl">Isi AKPD</div><div class="sv">${sudahAK}</div><div class="sd">${total?Math.round(sudahAK/total*100):0}%</div></div>
+    <div class="sc pk"><div class="sl">Isi Sosiometri</div><div class="sv">${sudahSO}</div><div class="sd">${total?Math.round(sudahSO/total*100):0}%</div></div>
+    <div class="sc am"><div class="sl">Paket AKPD</div><div class="sv">${DB.akpdList.length}</div><div class="sd">4 bidang</div></div>
+    <div class="sc pu"><div class="sl">Paket Sosio</div><div class="sv">${DB.sosioList.length}</div><div class="sd">Aktif</div></div>
+    <div class="sc go"><div class="sl">Total Respons</div><div class="sv">${DB.jawaban.length}</div><div class="sd">Semua angket</div></div>
+  `;
+  function rCG(elId,jenis,pfClass){
+    document.getElementById(elId).innerHTML=DB.kelasList.map(k=>{
+      const sw=DB.siswaList.filter(s=>s.kelas===k);
+      const jw=new Set(DB.jawaban.filter(j=>j.kelas===k&&j.jenis===jenis).map(j=>j.siswaId)).size;
+      const p=sw.length?Math.round(jw/sw.length*100):0;
+      const cc=p>=80?'gn':p>=50?'am':'bl';
+      return `<div class="cc"><div class="cc-hd"><div class="cn">${k}</div><span class="bdg bg-${cc}">${p}%</span></div>
+        <div style="font-size:12px;color:var(--tx3);margin-bottom:8px">${jw}/${sw.length} siswa</div>
+        <div class="pb"><div class="pf ${pfClass}" style="width:${p}%"></div></div></div>`;
+    }).join('');
+  }
+  rCG('cgAKPD','akpd','pf-bl');rCG('cgSosio','sosiometri','pf-pk');
+}
+
+// ── DATA RESPONS ──
+function switchDTab(j){
+  dTab=j;
+  document.getElementById('dtAK').className='stab'+(j==='akpd'?' a-ak':'');
+  document.getElementById('dtSO').className='stab'+(j==='sosiometri'?' a-so':'');
+  popDataFilters();renderTblData();
+}
+function popDataFilters(){
+  document.getElementById('fKD').innerHTML='<option value="">Semua Kelas</option>'+DB.kelasList.map(k=>`<option>${k}</option>`).join('');
+  const list=getPL(dTab);
+  document.getElementById('fPD').innerHTML='<option value="">Semua Paket</option>'+list.map(p=>`<option value="${p.id}">${p.nama}</option>`).join('');
+}
+function renderTblData(){
+  const list=getPL(dTab);
+  let rows=[];
+  DB.siswaList.forEach(s=>list.forEach(p=>{
+    const jw=DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);rows.push({s,p,jw});
+  }));
+  const srch=(document.getElementById('srD')?.value||'').toLowerCase();
+  const kls=document.getElementById('fKD')?.value||'';
+  const pkt=document.getElementById('fPD')?.value||'';
+  const sts=document.getElementById('fSD')?.value||'';
+  if(srch)rows=rows.filter(r=>r.s.nama.toLowerCase().includes(srch)||r.s.nis.includes(srch));
+  if(kls)rows=rows.filter(r=>r.s.kelas===kls);
+  if(pkt)rows=rows.filter(r=>r.p.id===parseInt(pkt));
+  if(sts==='sudah')rows=rows.filter(r=>!!r.jw);
+  if(sts==='belum')rows=rows.filter(r=>!r.jw);
+  const tbody=document.getElementById('tblDB');
+  if(!rows.length){tbody.innerHTML=`<tr><td colspan="8" style="text-align:center;padding:36px;color:var(--tx3)">Tidak ada data</td></tr>`;return;}
+  tbody.innerHTML=rows.map((r,i)=>`<tr>
+    <td style="color:var(--tx3)">${i+1}</td>
+    <td><strong>${r.s.nama}</strong></td>
+    <td style="font-family:monospace;font-size:13px;color:var(--ac2)">${r.s.nis}</td>
+    <td>${r.s.kelas}</td>
+    <td><span class="bdg bg-bl" style="font-size:11px">${r.p.nama}</span></td>
+    <td style="color:var(--tx2)">${r.jw?r.jw.tanggal:'—'}</td>
+    <td>${r.jw?'<span class="bdg bg-gn">✓ Sudah</span>':'<span class="bdg bg-rd">✗ Belum</span>'}</td>
+    <td>${r.jw?`<button class="btn btn-g btn-sm" onclick="lihatDetail(${r.s.id},${r.p.id})">👁 Detail</button>`:'—'}</td>
+  </tr>`).join('');
+}
+function lihatDetail(sid,pid){
+  const s=DB.siswaList.find(x=>x.id===sid);const p=findPaket(pid);
+  const jw=DB.jawaban.find(j=>j.siswaId===sid&&j.paketId===pid);
+  if(!s||!p||!jw){toast('Data tidak ditemukan','error');return;}
+  document.getElementById('mDN').textContent=s.nama;
+  document.getElementById('mDI').textContent=`${s.kelas} • NIS: ${s.nis} • ${p.nama} • ${jw.tanggal}`;
+  document.getElementById('mDB').innerHTML=p.soal.map((q,i)=>`<div class="ab">
+    <div class="aq">${i+1}. ${q.teks} <span class="bdg ${tc(q.tipe)}" style="font-size:10px;margin-left:4px">${tl(q.tipe)}</span></div>
+    <div class="aa">${jw.jawaban[q.id]!==undefined?String(jw.jawaban[q.id]):'<em style="color:var(--tx3)">Tidak dijawab</em>'}</div>
+  </div>`).join('');
+  om('mDetail');
+}
+function eksporData(){
+  const list=getPL(dTab);
+  const allS=list.flatMap(p=>p.soal.map(s=>({...s,pn:p.nama})));
+  const head=['No','Nama','NIS','Kelas','Paket','Tanggal','Status',...allS.map(s=>`"${s.pn}: ${s.teks}"`)];
+  let no=1;
+  const rows=DB.siswaList.flatMap(s=>list.map(p=>{
+    const jw=DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);
+    return [no++,`"${s.nama}"`,s.nis,s.kelas,`"${p.nama}"`,jw?jw.tanggal:'',jw?'Sudah':'Belum',...allS.map(q=>q.pn===p.nama&&jw?`"${jw.jawaban[q.id]||''}"`:'"—"')].join(',');
+  }));
+  dlCSV([head.join(','),...rows].join('\n'),`${dTab.toUpperCase()}_Data`);
+}
+function dlCSV(csv,fname){
+  const blob=new Blob(['\uFEFF'+csv],{type:'text/csv;charset=utf-8;'});
+  const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download=`${fname}_${new Date().toLocaleDateString('id-ID').replace(/\//g,'-')}.csv`;a.click();URL.revokeObjectURL(url);
+  toast('Data diekspor ke CSV','success');
+}
+
+// ══════════════════════════════════════════════════
+//   ANALISIS AKPD — 4 BIDANG
+// ══════════════════════════════════════════════════
+function initAnalisisAKPD(){
+  // populate filters
+  const kEl=document.getElementById('anAKPDkelas');
+  kEl.innerHTML='<option value="SEMUA">🌐 Semua Kelas</option>'+DB.kelasList.map(k=>`<option value="${k}">${k}</option>`).join('');
+  const pEl=document.getElementById('anAKPDpaket');
+  pEl.innerHTML='<option value="">Semua Paket AKPD</option>'+DB.akpdList.map(p=>`<option value="${p.id}">${p.nama}</option>`).join('');
+  curBidang='all';
+  // reset bidang tab buttons
+  setBidangTab('all');
+  renderAnalisisAKPD();
+}
+
+function switchBidang(b){curBidang=b;setBidangTab(b);renderAnalisisAKPD();}
+function setBidangTab(b){
+  ['all','pribadi','sosial','belajar','karier'].forEach(x=>{
+    const el=document.getElementById({all:'bAll',pribadi:'bPR',sosial:'bSO',belajar:'bBL',karier:'bKA'}[x]);
+    if(!el)return;
+    el.className='btab'+(b===x?` ${x==='all'?'act-all':BIDANG[x]?.btnClass||'act-all'}`:'');
+  });
+}
+
+function filterAKPDBidang(b){
+  curAKPDFilter=b;
+  ['semua','pribadi','sosial','belajar','karier'].forEach(x=>{
+    const el=document.getElementById({semua:'fAll',pribadi:'fPR',sosial:'fSO',belajar:'fBL',karier:'fKA'}[x]);
+    if(!el)return;
+    el.className='btab'+(b===x?` ${x==='semua'?'act-all':BIDANG[x]?.btnClass||'act-all'}`:'');
+  });
+  renderPaketGrid('akpd');
+}
+
+// Hitung skor numerik untuk satu jawaban soal
+function hitungSkorSoal(q, jawaban) {
+  const j = jawaban[q.id];
+  if(j === undefined || j === null || j === '') return null;
+  if(q.tipe === 'likert') return parseInt(j);
+  if(q.tipe === 'rating') return parseInt(j);
+  if(q.tipe === 'slider') {
+    const cfg = q.config || {};
+    const mn = cfg.min ?? 0; const mx = cfg.max ?? 100;
+    return Math.round(((parseInt(j) - mn) / (mx - mn)) * 4) + 1; // normalize ke 1-5
+  }
+  return null; // teks tidak dihitung numerik
+}
+
+function renderAnalisisAKPD(){
+  const kelasSel = document.getElementById('anAKPDkelas').value;
+  const paketSel = document.getElementById('anAKPDpaket').value;
+  const cont = document.getElementById('analAKPDContent');
+
+  // Tentukan paket yang dianalisis
+  let paketList = DB.akpdList;
+  if(paketSel) paketList = paketList.filter(p=>p.id===parseInt(paketSel));
+  if(curBidang !== 'all') paketList = paketList.filter(p=>p.bidang===curBidang);
+
+  // Tentukan siswa yang dianalisis
+  let siswaList = DB.siswaList;
+  if(kelasSel !== 'SEMUA') siswaList = siswaList.filter(s=>s.kelas===kelasSel);
+
+  if(!paketList.length){cont.innerHTML=`<div class="emp"><div class="emp-i">📊</div><div class="emp-t">Tidak ada paket untuk bidang ini</div></div>`;return;}
+
+  const kelasTampil = kelasSel === 'SEMUA' ? 'Semua Kelas' : kelasSel;
+
+  let html = `<div style="background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+    <div style="font-size:32px">${kelasSel==='SEMUA'?'🌐':'🏫'}</div>
+    <div><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700">${kelasTampil}</div>
+    <div style="font-size:13px;color:var(--tx3)">${siswaList.length} siswa • ${paketList.length} paket dianalisis</div></div>
+  </div>`;
+
+  // Bidang ringkasan (only on 'all')
+  if(curBidang === 'all'){
+    html += `<div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:14px">📊 Ringkasan Skor per Bidang</div>`;
+    html += `<div class="bidang-score-grid">`;
+    Object.entries(BIDANG).forEach(([key,bd])=>{
+      const bPaket = DB.akpdList.filter(p=>p.bidang===key);
+      if(!bPaket.length){return;}
+      const allScores = [];
+      siswaList.forEach(s=>{
+        bPaket.forEach(p=>{
+          const jw = DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);
+          if(!jw)return;
+          p.soal.forEach(q=>{
+            const skor = hitungSkorSoal(q, jw.jawaban);
+            if(skor !== null) allScores.push(skor);
+          });
+        });
+      });
+      const avg = allScores.length ? (allScores.reduce((a,b)=>a+b,0)/allScores.length).toFixed(2) : '—';
+      const pct = allScores.length ? Math.round((parseFloat(avg)-1)/4*100) : 0;
+      const {icon,label,pfClass} = bd;
+      html += `<div class="bsc">
+        <div class="bsc-header"><div style="font-size:22px">${icon}</div><div class="bsc-skor" style="color:var(--${bd.color==='green'?'green':bd.color==='amber'?'amber':bd.color==='purple'?'purple':'teal'})">${avg}</div></div>
+        <div class="bsc-nama" style="margin-bottom:8px">${label}</div>
+        <div class="pb"><div class="pf ${pfClass}" style="width:${pct}%"></div></div>
+        <div style="font-size:11px;color:var(--tx3);margin-top:5px">${allScores.length} respons numerik</div>
+      </div>`;
+    });
+    html += `</div>`;
+  }
+
+  // Detail per paket
+  paketList.forEach(p=>{
+    const bInfo = BIDANG[p.bidang] || {icon:'📋',label:p.bidang||'',color:'green',pfClass:'pf-bl'};
+    html += `<div style="background:var(--sf);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;flex-wrap:wrap">
+        <div style="font-size:24px">${p.icon||'📋'}</div>
+        <div>
+          <div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600">${p.nama}</div>
+          <span class="bdg ${getBidangBdg(p.bidang)}">${bInfo.icon} ${bInfo.label}</span>
+        </div>
+        <div style="margin-left:auto;text-align:right">
+          <div style="font-size:12px;color:var(--tx3)">${DB.jawaban.filter(j=>j.paketId===p.id&&siswaList.some(s=>s.id===j.siswaId)).length} / ${siswaList.length} siswa mengisi</div>
+        </div>
+      </div>`;
+
+    // Top kebutuhan (berdasarkan skor terendah = paling butuh perhatian)
+    const soalSkor = [];
+    p.soal.forEach(q=>{
+      if(!['likert','rating','slider'].includes(q.tipe)) return;
+      const scores = [];
+      siswaList.forEach(s=>{
+        const jw = DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);
+        if(!jw) return;
+        const sk = hitungSkorSoal(q, jw.jawaban);
+        if(sk!==null) scores.push(sk);
+      });
+      if(scores.length){
+        const avg = scores.reduce((a,b)=>a+b,0)/scores.length;
+        soalSkor.push({q, avg, count:scores.length});
+      }
+    });
+
+    if(soalSkor.length){
+      soalSkor.sort((a,b)=>a.avg-b.avg); // terendah = paling butuh perhatian
+      html += `<div style="font-size:13px;font-weight:600;color:var(--tx2);margin-bottom:10px">📌 Urutan Prioritas Kebutuhan (skor rendah = butuh perhatian lebih):</div>`;
+      html += `<div class="top-kebutuhan">`;
+      soalSkor.forEach((item,i)=>{
+        const {q,avg,count} = item;
+        const pct = Math.round((avg-1)/4*100);
+        const rankClass = i===0?'r1':i===1?'r2':i===2?'r3':'rn';
+        const color = avg < 2.5 ? 'var(--red)' : avg < 3.5 ? 'var(--amber)' : 'var(--green)';
+        html += `<div class="tk-item">
+          <div class="tk-rank ${rankClass}">${i+1}</div>
+          <div class="tk-info">
+            <div class="tk-q">${q.teks}</div>
+            <div class="tk-meta">
+              <div class="pb" style="margin-top:6px"><div class="pf pf-bl" style="width:${pct}%;background:${color}"></div></div>
+              <span style="font-size:11px;color:var(--tx3)">${count} respons</span>
+            </div>
+          </div>
+          <div class="tk-skor" style="color:${color}">${avg.toFixed(2)}</div>
+        </div>`;
+      });
+      html += `</div>`;
+    }
+
+    // Jawaban pilihan ganda (distribusi)
+    p.soal.filter(q=>q.tipe==='pilihan'||q.tipe==='ganda').forEach(q=>{
+      const freq = {};
+      (q.opsi||[]).forEach(o=>freq[o]=0);
+      siswaList.forEach(s=>{
+        const jw = DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);
+        if(!jw)return;
+        const jawab = jw.jawaban[q.id];
+        if(!jawab)return;
+        String(jawab).split(', ').forEach(o=>{if(freq[o]!==undefined)freq[o]++;});
+      });
+      const total = Object.values(freq).reduce((a,b)=>a+b,0);
+      if(total===0)return;
+      html += `<div style="background:var(--sf2);border:1px solid var(--bd);border-radius:var(--rsm);padding:12px 14px;margin-top:10px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px">${q.teks}</div>`;
+      Object.entries(freq).sort((a,b)=>b[1]-a[1]).forEach(([label,cnt])=>{
+        const pct = total ? Math.round(cnt/total*100) : 0;
+        html += `<div style="margin-bottom:6px">
+          <div style="display:flex;justify-content:space-between;font-size:12px;margin-bottom:3px"><span>${label}</span><span><strong>${cnt}</strong> (${pct}%)</span></div>
+          <div class="pb"><div class="pf pf-bl" style="width:${pct}%"></div></div>
+        </div>`;
+      });
+      html += `</div>`;
+    });
+
+    html += `</div>`; // end paket card
+  });
+
+  cont.innerHTML = html;
+}
+
+function eksporAnalisisAKPD(){
+  const kelasSel = document.getElementById('anAKPDkelas').value;
+  const siswaList = kelasSel==='SEMUA'?DB.siswaList:DB.siswaList.filter(s=>s.kelas===kelasSel);
+  const head = ['Nama','NIS','Kelas',...Object.keys(BIDANG).map(b=>`Skor ${BIDANG[b].label}`),'Rata-rata'];
+  const rows = siswaList.map(s=>{
+    const skorBidang = Object.keys(BIDANG).map(b=>{
+      const bPaket = DB.akpdList.filter(p=>p.bidang===b);
+      const allSk = [];
+      bPaket.forEach(p=>{
+        const jw = DB.jawaban.find(j=>j.siswaId===s.id&&j.paketId===p.id);
+        if(!jw)return;
+        p.soal.forEach(q=>{const sk=hitungSkorSoal(q,jw.jawaban);if(sk!==null)allSk.push(sk);});
+      });
+      return allSk.length?(allSk.reduce((a,b)=>a+b,0)/allSk.length).toFixed(2):'—';
+    });
+    const numSkor = skorBidang.filter(x=>x!=='—').map(Number);
+    const avg = numSkor.length?(numSkor.reduce((a,b)=>a+b,0)/numSkor.length).toFixed(2):'—';
+    return [`"${s.nama}"`,s.nis,s.kelas,...skorBidang,avg].join(',');
+  });
+  dlCSV([head.join(','),...rows].join('\n'), `Analisis_AKPD${kelasSel!=='SEMUA'?'_'+kelasSel.replace(/ /g,'_'):''}`);
+}
+
+// ══════════════════════════════════════════════════
+//   ANALISIS SOSIOMETRI
+// ══════════════════════════════════════════════════
+function initAnalisisSosio(){
+  const kEl = document.getElementById('anSosioKelas');
+  kEl.innerHTML = '<option value="">Pilih Kelas</option>'+DB.kelasList.map(k=>`<option value="${k}">${k}</option>`).join('');
+  const pEl = document.getElementById('anSosioPaket');
+  pEl.innerHTML = '<option value="">Semua Paket Sosiometri</option>'+DB.sosioList.map(p=>`<option value="${p.id}">${p.nama}</option>`).join('');
+  document.getElementById('analSosioContent').innerHTML = `<div class="emp"><div class="emp-i">🏫</div><div class="emp-t">Pilih kelas untuk melihat analisis</div></div>`;
+}
+
+function renderAnalisisSosio(){
+  const kelas = document.getElementById('anSosioKelas').value;
+  const paketSel = document.getElementById('anSosioPaket').value;
+  const cont = document.getElementById('analSosioContent');
+  if(!kelas){cont.innerHTML=`<div class="emp"><div class="emp-i">🏫</div><div class="emp-t">Pilih kelas untuk melihat analisis</div></div>`;return;}
+
+  const siswaKelas = DB.siswaList.filter(s=>s.kelas===kelas);
+  if(!siswaKelas.length){cont.innerHTML=`<div class="emp"><div class="emp-i">👥</div><div class="emp-t">Tidak ada siswa di kelas ini</div></div>`;return;}
+
+  let paketList = DB.sosioList;
+  if(paketSel) paketList = paketList.filter(p=>p.id===parseInt(paketSel));
+
+  const jawabanKelas = DB.jawaban.filter(j=>j.kelas===kelas&&j.jenis==='sosiometri'&&(!paketSel||j.paketId===parseInt(paketSel)));
+
+  // Hitung vote received per siswa (akumulasi semua soal semua paket)
+  const voteCount = {}; // siswaId -> jumlah dipilih
+  siswaKelas.forEach(s=>{voteCount[s.id]=0;});
+
+  jawabanKelas.forEach(jw=>{
+    const p = findPaket(jw.paketId);
+    if(!p) return;
+    p.soal.filter(q=>q.tipe==='sosio_pilih').forEach(q=>{
+      const chosenNames = String(jw.jawaban[q.id]||'').split(', ').filter(Boolean);
+      chosenNames.forEach(name=>{
+        const target = siswaKelas.find(s=>s.nama===name);
+        if(target) voteCount[target.id]=(voteCount[target.id]||0)+1;
+      });
+    });
+  });
+
+  const mengisi = jawabanKelas.map(j=>j.siswaId);
+  const belumIsi = siswaKelas.filter(s=>!mengisi.includes(s.id));
+  const tidakDipilih = siswaKelas.filter(s=>(voteCount[s.id]||0)===0&&mengisi.includes(s.id));
+
+  // Ranking
+  const ranking = siswaKelas.map(s=>({...s,votes:voteCount[s.id]||0})).sort((a,b)=>b.votes-a.votes);
+
+  let html = '';
+
+  // Header info
+  html += `<div style="background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;gap:16px;flex-wrap:wrap;justify-content:space-between">
+    <div style="display:flex;align-items:center;gap:16px">
+      <div style="font-size:32px">🏫</div>
+      <div><div style="font-family:'Fraunces',serif;font-size:18px;font-weight:700">Kelas ${kelas}</div>
+      <div style="font-size:13px;color:var(--tx3)">${siswaKelas.length} siswa • ${jawabanKelas.length} respons masuk</div></div>
+    </div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap">
+      <div style="text-align:center"><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--green)">${jawabanKelas.length}</div><div style="font-size:11px;color:var(--tx3)">Sudah Isi</div></div>
+      <div style="text-align:center"><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--red)">${belumIsi.length}</div><div style="font-size:11px;color:var(--tx3)">Belum Isi</div></div>
+      <div style="text-align:center"><div style="font-family:'Fraunces',serif;font-size:22px;font-weight:700;color:var(--amber)">${tidakDipilih.length}</div><div style="font-size:11px;color:var(--tx3)">Terisolasi</div></div>
+    </div>
+  </div>`;
+
+  // Alert terisolasi
+  if(tidakDipilih.length){
+    html += `<div class="sosio-isolated">⚠️ <strong>Siswa yang tidak dipilih siapapun (potensi terisolasi):</strong> ${tidakDipilih.map(s=>s.nama).join(', ')} — perlu perhatian khusus dari Guru BK!</div>`;
+  }
+  if(belumIsi.length){
+    html += `<div class="sosio-alert">❌ <strong>Belum mengisi sosiometri:</strong> ${belumIsi.map(s=>s.nama).join(', ')}</div>`;
+  }
+
+  // Ranking paling banyak dipilih
+  html += `<div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:14px">🏆 Ranking Popularitas (Total Dipilih)</div>`;
+  html += `<div class="sosio-rank-grid">`;
+  ranking.forEach((s,i)=>{
+    const rnClass = i===0?'rn1':i===1?'rn2':i===2?'rn3':'rn4';
+    const bar = siswaKelas.length>1?Math.round(s.votes/(ranking[0]?.votes||1)*100):0;
+    html += `<div class="rank-card">
+      <div class="rank-num ${rnClass}">${i+1}</div>
+      <div class="rank-info">
+        <div class="rank-nama">${s.nama}</div>
+        <div class="rank-count">${s.votes} kali dipilih</div>
+        <div class="pb" style="margin-top:5px"><div class="pf pf-pk" style="width:${bar}%"></div></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  // Matrix Sosiometri per soal per paket
+  paketList.forEach(p=>{
+    const jwPaket = jawabanKelas.filter(j=>j.paketId===p.id);
+    if(!jwPaket.length) return;
+
+    html += `<div style="font-family:'Fraunces',serif;font-size:16px;font-weight:600;margin-bottom:12px;margin-top:20px">${p.icon||'🤝'} ${p.nama} — Matrix Sosiometri</div>`;
+
+    p.soal.filter(q=>q.tipe==='sosio_pilih').forEach(q=>{
+      html += `<div style="margin-bottom:18px">
+        <div style="font-size:13px;font-weight:500;margin-bottom:10px;color:var(--tx2)">📌 ${q.teks}</div>`;
+
+      // Build matrix: baris = pemilih, kolom = yang dipilih
+      html += `<div class="sosio-matrix"><table>
+        <thead><tr><th>Pemilih ↓ / Dipilih →</th>${siswaKelas.map(s=>`<th style="writing-mode:vertical-rl;text-orientation:mixed;height:80px;padding:8px 6px">${s.nama.split(' ')[0]}</th>`).join('')}<th>Total Dipilih</th></tr></thead>
+        <tbody>`;
+
+      const colVotes = {};
+      siswaKelas.forEach(s=>colVotes[s.id]=0);
+
+      siswaKelas.forEach(pemilih=>{
+        const jw = jwPaket.find(j=>j.siswaId===pemilih.id);
+        const chosenNames = jw?String(jw.jawaban[q.id]||'').split(', ').filter(Boolean):[];
+        const chosenIds = new Set(chosenNames.map(name=>{const t=siswaKelas.find(s=>s.nama===name);return t?t.id:null;}).filter(Boolean));
+        chosenIds.forEach(id=>colVotes[id]=(colVotes[id]||0)+1);
+        html += `<tr><td>${pemilih.nama}</td>`;
+        siswaKelas.forEach(dipilih=>{
+          if(dipilih.id===pemilih.id){html+=`<td class="cell-self">—</td>`;}
+          else if(chosenIds.has(dipilih.id)){html+=`<td class="cell-pick">✓</td>`;}
+          else{html+=`<td></td>`;}
+        });
+        html += `<td style="font-weight:600;color:var(--tx2)">0</td></tr>`;
+      });
+
+      // Baris total
+      html += `<tr style="background:var(--sf2)"><td style="font-weight:600">Total Memilih</td>`;
+      siswaKelas.forEach(s=>html+=`<td style="font-weight:700;color:var(--ac2)">${colVotes[s.id]||0}</td>`);
+      html += `<td></td></tr>`;
+
+      html += `</tbody></table></div>`;
+
+      // Legenda
+      html += `<div class="sosio-legend">
+        <div class="leg-item"><div style="width:18px;height:18px;border-radius:4px;background:var(--acs);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--ac2)">✓</div><span>Dipilih</span></div>
+        <div class="leg-item"><div style="width:18px;height:18px;border-radius:4px;background:var(--sf3);display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--tx3)">—</div><span>Diri sendiri</span></div>
+        <div class="leg-item"><div style="width:18px;height:18px;border-radius:4px;background:var(--sf2);border:1px solid var(--bd)"></div><span>Tidak dipilih</span></div>
+      </div>`;
+      html += `</div>`; // end soal
+    });
+  });
+
+  // Analisis simpulan
+  html += `<div style="background:var(--sf2);border:1px solid var(--bd);border-radius:var(--r);padding:18px;margin-top:20px">
+    <div style="font-family:'Fraunces',serif;font-size:15px;font-weight:600;margin-bottom:14px">💡 Simpulan & Rekomendasi</div>`;
+
+  const topStar = ranking[0];
+  const bottomStar = ranking.filter(s=>s.votes>0).pop();
+  if(topStar&&topStar.votes>0) html+=`<div class="ab"><div class="aq">⭐ Siswa paling populer</div><div class="aa">${topStar.nama} (${topStar.votes} kali dipilih) — berpotensi menjadi pemimpin kelompok</div></div>`;
+  if(tidakDipilih.length) html+=`<div class="ab" style="border-color:var(--amber)"><div class="aq">⚠️ Siswa terisolasi (tidak dipilih siapapun)</div><div class="aa">${tidakDipilih.map(s=>s.nama).join(', ')} — perlu intervensi BK untuk membantu adaptasi sosial</div></div>`;
+  if(belumIsi.length) html+=`<div class="ab" style="border-color:var(--red)"><div class="aq">❌ Data tidak lengkap</div><div class="aa">${belumIsi.map(s=>s.nama).join(', ')} belum mengisi — analisis mungkin tidak akurat</div></div>`;
+
+  html += `</div>`;
+
+  cont.innerHTML = html;
+}
+
+function eksporSosio(){
+  const kelas = document.getElementById('anSosioKelas').value;
+  if(!kelas){toast('Pilih kelas terlebih dahulu','error');return;}
+  const siswaKelas = DB.siswaList.filter(s=>s.kelas===kelas);
+  const jw = DB.jawaban.filter(j=>j.kelas===kelas&&j.jenis==='sosiometri');
+  const head = ['Nama','NIS','Total Dipilih'];
+  const voteCount = {};siswaKelas.forEach(s=>voteCount[s.id]=0);
+  jw.forEach(j=>{
+    const p=findPaket(j.paketId);if(!p)return;
+    p.soal.filter(q=>q.tipe==='sosio_pilih').forEach(q=>{
+      String(j.jawaban[q.id]||'').split(', ').filter(Boolean).forEach(name=>{
+        const t=siswaKelas.find(s=>s.nama===name);if(t)voteCount[t.id]=(voteCount[t.id]||0)+1;
+      });
+    });
+  });
+  const rows = siswaKelas.map(s=>[`"${s.nama}"`,s.nis,voteCount[s.id]||0].join(','));
+  dlCSV([head.join(','),...rows].join('\n'),`Sosiometri_${kelas.replace(/ /g,'_')}`);
+}
+
+// ── PAKET GRID ──
+function renderPaketGrid(jenis){
+  const list=getPL(jenis);
+  const elId=jenis==='akpd'?'pgAKPD':'pgSosio';
+  const grid=document.getElementById(elId);
+  let filtered = list;
+  if(jenis==='akpd'&&curAKPDFilter!=='semua') filtered=list.filter(p=>p.bidang===curAKPDFilter);
+  if(!filtered.length){grid.innerHTML=`<div class="emp" style="grid-column:1/-1"><div class="emp-i">${jenis==='akpd'?'📋':'🤝'}</div><div class="emp-t">Belum ada paket</div></div>`;return;}
+  grid.innerHTML=filtered.map(p=>{
+    const bInfo = p.bidang&&BIDANG[p.bidang]?BIDANG[p.bidang]:null;
+    const bdgClass = p.bidang?{pribadi:'pkl-b1',sosial:'pkl-b2',belajar:'pkl-b3',karier:'pkl-b4'}[p.bidang]||'pkl-ak':'pkl-so';
+    const bdgLabel = bInfo?`${bInfo.icon} ${bInfo.label}`:`🤝 Sosiometri`;
+    return `<div class="pkc c-${p.color||'bl'}">
+      <div class="pkl ${bdgClass}">${bdgLabel}</div>
+      <div style="font-size:28px;margin:8px 0 10px">${p.icon||'📋'}</div>
+      <div class="ptt">${p.nama}</div>
+      <div class="pds">${p.desc||''}</div>
+      <div class="pft">
+        <span class="bdg bg-bl">${p.soal?p.soal.length:0} soal</span>
+        <div class="ta">
+          <button class="btn btn-g btn-sm" onclick="openKelolaSoal(${p.id})">✏️ Soal</button>
+          <button class="btn btn-g btn-sm" onclick="openEditPaket(${p.id})">⚙️</button>
+          <button class="btn btn-d btn-sm" onclick="konfHapus('paket',${p.id})">🗑</button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function openBuatPaket(jenis){
+  editPaketId=null;document.getElementById('mPJ').value=jenis;document.getElementById('mPID').value='';
+  document.getElementById('mPT').textContent=`Buat Paket ${jenis==='akpd'?'AKPD':'Sosiometri'}`;
+  document.getElementById('inNP').value='';document.getElementById('inDP').value='';
+  document.getElementById('inBP').value='pribadi';document.getElementById('inCP').value=jenis==='akpd'?'gn':'pk';
+  document.getElementById('inIP').value=jenis==='akpd'?'📋':'🤝';
+  document.getElementById('inBP').parentElement.parentElement.style.display=jenis==='akpd'?'':'none';
+  om('mPaket');
+}
+function openEditPaket(id){
+  const p=findPaket(id);if(!p)return;
+  editPaketId=id;document.getElementById('mPJ').value=p.jenis;document.getElementById('mPID').value=id;
+  document.getElementById('mPT').textContent='Edit Paket';
+  document.getElementById('inNP').value=p.nama;document.getElementById('inDP').value=p.desc||'';
+  document.getElementById('inBP').value=p.bidang||'pribadi';document.getElementById('inCP').value=p.color||'bl';document.getElementById('inIP').value=p.icon||'📋';
+  document.getElementById('inBP').parentElement.parentElement.style.display=p.jenis==='akpd'?'':'none';
+  om('mPaket');
+}
+function simpanPaket(){
+  const nama=document.getElementById('inNP').value.trim();if(!nama){toast('Nama paket wajib diisi','error');return;}
+  const jenis=document.getElementById('mPJ').value;
+  const data={nama,jenis,desc:document.getElementById('inDP').value.trim(),color:document.getElementById('inCP').value,icon:document.getElementById('inIP').value,bidang:jenis==='akpd'?document.getElementById('inBP').value:null};
+  const list=jenis==='akpd'?DB.akpdList:DB.sosioList;
+  if(editPaketId){const i=list.findIndex(p=>p.id===editPaketId);if(i>-1)list[i]={...list[i],...data};toast('Paket diperbarui','success');}
+  else{list.push({id:uid(),...data,soal:[]});toast('Paket dibuat','success');}
+  saveDB();cm('mPaket');renderPaketGrid(jenis);
+}
+
+// ── KELOLA SOAL ──
+function openKelolaSoal(pid){
+  const p=findPaket(pid);if(!p)return;
+  activePSoal=pid;document.getElementById('mKST').textContent=p.nama;document.getElementById('mKSI').textContent=p.bidang?`${BIDANG[p.bidang]?.icon} ${BIDANG[p.bidang]?.label} • ${p.desc||''}`:p.desc||'';
+  renderSoalList(p);om('mKS');
+}
+function renderSoalList(p){
+  document.getElementById('jmlSL').textContent=`${p.soal.length} soal`;
+  const el=document.getElementById('soalLP');
+  if(!p.soal.length){el.innerHTML=`<div class="emp"><div class="emp-i">📝</div><div class="emp-t">Belum ada soal</div></div>`;return;}
+  el.innerHTML=p.soal.map((q,i)=>`<div class="sit">
+    <div class="sm"><div class="stx">${i+1}. ${q.teks}</div>
+    <div class="sinf"><span class="bdg ${tc(q.tipe)}">${tl(q.tipe)}</span>${q.tipe==='sosio_pilih'?`<span class="tx tm">Pilih ${q.config?.jumlah||2} teman</span>`:''}${q.opsi&&q.opsi.length?`<span class="tx tm">${q.opsi.slice(0,3).join(' · ')}${q.opsi.length>3?'…':''}</span>`:''}</div></div>
+    <div class="ta" style="flex-shrink:0"><button class="btn btn-g btn-sm" onclick="openEditSoal(${q.id})">✏️</button><button class="btn btn-d btn-sm" onclick="hapusSoal(${q.id})">🗑</button></div>
+  </div>`).join('');
+}
+function openAddSoal(){
+  editSoalId=null;const p=findPaket(activePSoal);
+  document.getElementById('mSoalT').textContent='Tambah Soal';document.getElementById('mSJ').value=p?p.jenis:'akpd';
+  document.getElementById('inTS').value='';document.getElementById('inTiS').value=p&&p.jenis==='sosiometri'?'sosio_pilih':'pilihan';
+  document.getElementById('lKi').value='Sangat Tidak Setuju';document.getElementById('lKa').value='Sangat Setuju';
+  document.getElementById('sMn').value=0;document.getElementById('sMx').value=100;document.getElementById('sDF').value=50;document.getElementById('sUT').value='';
+  document.getElementById('inSJml').value=2;
+  resetOpsi(['','','']);onTipe();om('mSoal');
+}
+function openEditSoal(qid){
+  const p=findPaket(activePSoal);if(!p)return;const q=p.soal.find(s=>s.id===qid);if(!q)return;
+  editSoalId=qid;document.getElementById('mSoalT').textContent='Edit Soal';document.getElementById('mSJ').value=p.jenis;
+  document.getElementById('inTS').value=q.teks;document.getElementById('inTiS').value=q.tipe;
+  const c=q.config||{};
+  document.getElementById('lKi').value=c.labelKiri||'Sangat Tidak Setuju';document.getElementById('lKa').value=c.labelKanan||'Sangat Setuju';
+  document.getElementById('sMn').value=c.min??0;document.getElementById('sMx').value=c.max??100;document.getElementById('sDF').value=c.default??50;document.getElementById('sUT').value=c.unit||'';
+  document.getElementById('inSJml').value=c.jumlah||2;
+  resetOpsi(q.opsi&&q.opsi.length?q.opsi:['']);onTipe();om('mSoal');
+}
+function onTipe(){
+  const t=document.getElementById('inTiS').value;
+  document.getElementById('opC').style.display=['pilihan','ganda','urutan'].includes(t)?'':'none';
+  document.getElementById('lkC').style.display=t==='likert'?'':'none';
+  document.getElementById('slC').style.display=t==='slider'?'':'none';
+  document.getElementById('soC').style.display=t==='sosio_pilih'?'':'none';
+}
+function resetOpsi(arr){const el=document.getElementById('opLB');el.innerHTML='';arr.forEach(v=>addOpsi(v));}
+function addOpsi(val=''){const el=document.getElementById('opLB');const div=document.createElement('div');div.className='oib';div.innerHTML=`<input class="inp" value="${val}" placeholder="Teks pilihan..."><button class="btn btn-d btn-sm" style="flex-shrink:0" onclick="this.parentElement.remove()">✕</button>`;el.appendChild(div);}
+function simpanSoal(){
+  const p=findPaket(activePSoal);if(!p)return;
+  const teks=document.getElementById('inTS').value.trim();if(!teks){toast('Teks soal wajib diisi','error');return;}
+  const tipe=document.getElementById('inTiS').value;
+  const needsOpsi=['pilihan','ganda','urutan'].includes(tipe);
+  let opsi=[];if(needsOpsi){opsi=[...document.querySelectorAll('#opLB .oib input')].map(i=>i.value.trim()).filter(Boolean);if(opsi.length<2){toast('Minimal 2 pilihan','error');return;}}
+  let config={};
+  if(tipe==='likert')config={labelKiri:document.getElementById('lKi').value,labelKanan:document.getElementById('lKa').value};
+  if(tipe==='slider')config={min:parseInt(document.getElementById('sMn').value),max:parseInt(document.getElementById('sMx').value),default:parseInt(document.getElementById('sDF').value),unit:document.getElementById('sUT').value};
+  if(tipe==='sosio_pilih')config={jumlah:parseInt(document.getElementById('inSJml').value)};
+  if(editSoalId){const i=p.soal.findIndex(s=>s.id===editSoalId);if(i>-1)p.soal[i]={...p.soal[i],teks,tipe,opsi,config};toast('Soal diperbarui','success');}
+  else{p.soal.push({id:uid(),teks,tipe,opsi,config});toast('Soal ditambahkan','success');}
+  saveDB();cm('mSoal');renderSoalList(p);renderPaketGrid(p.jenis);
+}
+function hapusSoal(qid){const p=findPaket(activePSoal);if(!p)return;p.soal=p.soal.filter(s=>s.id!==qid);saveDB();renderSoalList(p);renderPaketGrid(p.jenis);toast('Soal dihapus','success');}
+
+// ── DATA SISWA ──
+function popSiswaFilter(){document.getElementById('fKS').innerHTML='<option value="">Semua Kelas</option>'+DB.kelasList.map(k=>`<option>${k}</option>`).join('');}
+function renderTblSiswa(){
+  let data=[...DB.siswaList];
+  const srch=(document.getElementById('srS')?.value||'').toLowerCase();
+  const kls=document.getElementById('fKS')?.value||'';
+  if(srch)data=data.filter(s=>s.nama.toLowerCase().includes(srch)||s.nis.includes(srch));
+  if(kls)data=data.filter(s=>s.kelas===kls);
+  const tbody=document.getElementById('tblSB');
+  if(!data.length){tbody.innerHTML=`<tr><td colspan="7" style="text-align:center;padding:36px;color:var(--tx3)">Tidak ada data</td></tr>`;return;}
+  tbody.innerHTML=data.map((s,i)=>`<tr>
+    <td style="color:var(--tx3)">${i+1}</td>
+    <td><strong>${s.nama}</strong></td>
+    <td><span style="font-family:monospace;font-size:13px;background:var(--acs);color:var(--ac2);padding:2px 8px;border-radius:6px">${s.nis}</span></td>
+    <td>${s.kelas}</td>
+    <td style="color:var(--tx3);letter-spacing:.05em">••••••</td>
+    <td>${s.aktif!==false?'<span class="bdg bg-gn">Aktif</span>':'<span class="bdg bg-rd">Non-aktif</span>'}</td>
+    <td><div class="ta"><button class="btn btn-g btn-sm" onclick="openEditSiswa(${s.id})">✏️ Edit</button><button class="btn btn-d btn-sm" onclick="konfHapus('siswa',${s.id})">🗑</button></div></td>
+  </tr>`).join('');
+}
+function openAddSiswa(){
+  editSiswaId=null;document.getElementById('mSiswaT').textContent='Tambah Siswa';
+  document.getElementById('inNS').value='';document.getElementById('inNiS').value='';document.getElementById('inPaS').value='';
+  document.getElementById('inKS').innerHTML=DB.kelasList.map(k=>`<option>${k}</option>`).join('');om('mSiswa');
+}
+function openEditSiswa(id){
+  const s=DB.siswaList.find(x=>x.id===id);if(!s)return;
+  editSiswaId=id;document.getElementById('mSiswaT').textContent='Edit Siswa';
+  document.getElementById('inNS').value=s.nama;document.getElementById('inNiS').value=s.nis;document.getElementById('inPaS').value=s.password;
+  document.getElementById('inKS').innerHTML=DB.kelasList.map(k=>`<option ${k===s.kelas?'selected':''}>${k}</option>`).join('');om('mSiswa');
+}
+function simpanSiswa(){
+  const nama=document.getElementById('inNS').value.trim();const nis=document.getElementById('inNiS').value.trim();
+  const kelas=document.getElementById('inKS').value;const pass=document.getElementById('inPaS').value.trim();
+  if(!nama||!nis||!kelas||!pass){toast('Semua field wajib diisi','error');return;}
+  if(DB.siswaList.find(s=>s.nis===nis&&s.id!==editSiswaId)){toast('NIS sudah digunakan','error');return;}
+  if(editSiswaId){const i=DB.siswaList.findIndex(s=>s.id===editSiswaId);if(i>-1)DB.siswaList[i]={...DB.siswaList[i],nama,nis,kelas,password:pass};toast('Data siswa diperbarui','success');}
+  else{DB.siswaList.push({id:uid(),nama,nis,kelas,password:pass,aktif:true});toast('Siswa ditambahkan','success');}
+  saveDB();cm('mSiswa');renderTblSiswa();
+}
+
+// ── DATA KELAS ──
+function renderTblKelas(){
+  const tbody=document.getElementById('tblKB');
+  if(!DB.kelasList.length){tbody.innerHTML=`<tr><td colspan="4" style="text-align:center;padding:36px;color:var(--tx3)">Belum ada kelas</td></tr>`;return;}
+  tbody.innerHTML=DB.kelasList.map((k,i)=>`<tr>
+    <td style="color:var(--tx3)">${i+1}</td>
+    <td><strong>${k}</strong></td>
+    <td><span class="bdg bg-bl">${DB.siswaList.filter(s=>s.kelas===k).length} siswa</span></td>
+    <td><div class="ta"><button class="btn btn-g btn-sm" onclick="openEditKelas('${k}')">✏️</button><button class="btn btn-d btn-sm" onclick="konfHapus('kelas','${k}')">🗑</button></div></td>
+  </tr>`).join('');
+}
+function openAddKelas(){editKelasOld=null;document.getElementById('mKelasT').textContent='Tambah Kelas';document.getElementById('inNK').value='';om('mKelas');}
+function openEditKelas(n){editKelasOld=n;document.getElementById('mKelasT').textContent='Edit Kelas';document.getElementById('inNK').value=n;om('mKelas');}
+function simpanKelas(){
+  const nama=document.getElementById('inNK').value.trim();if(!nama){toast('Nama kelas wajib diisi','error');return;}
+  if(editKelasOld){const i=DB.kelasList.indexOf(editKelasOld);if(i>-1)DB.kelasList[i]=nama;DB.siswaList.forEach(s=>{if(s.kelas===editKelasOld)s.kelas=nama;});toast('Kelas diperbarui','success');}
+  else{if(DB.kelasList.includes(nama)){toast('Kelas sudah ada','error');return;}DB.kelasList.push(nama);toast('Kelas ditambahkan','success');}
+  saveDB();cm('mKelas');renderTblKelas();
+}
+
+// ── HAPUS ──
+function konfHapus(type,id){
+  const descs={paket:'Hapus paket ini? Semua jawaban terkait akan hilang.',siswa:'Hapus siswa ini? Data jawaban juga akan dihapus.',kelas:'Hapus kelas ini? Siswa tidak ikut terhapus.'};
+  document.getElementById('mHD').textContent=descs[type]||'Yakin hapus?';
+  document.getElementById('btnHOK').onclick=()=>{
+    if(type==='paket'){const p=findPaket(id);const j=p?p.jenis:'akpd';if(j==='akpd')DB.akpdList=DB.akpdList.filter(p=>p.id!==id);else DB.sosioList=DB.sosioList.filter(p=>p.id!==id);DB.jawaban=DB.jawaban.filter(j=>j.paketId!==id);renderPaketGrid(j);}
+    if(type==='siswa'){DB.siswaList=DB.siswaList.filter(s=>s.id!==id);DB.jawaban=DB.jawaban.filter(j=>j.siswaId!==id);renderTblSiswa();}
+    if(type==='kelas'){DB.kelasList=DB.kelasList.filter(k=>k!==id);renderTblKelas();}
+    saveDB();cm('mHapus');toast('Data berhasil dihapus','success');
+  };
+  om('mHapus');
+}
+
+sp('pg-login');
+</script>
+</body>
+</html>
